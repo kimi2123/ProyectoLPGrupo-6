@@ -34,6 +34,8 @@ reserved = {
     "print": "PRINT",
     "do": "DO",
     "when" : "WHEN",
+    "nil" : "NIL",
+    "set": "SET",
 }
 
 
@@ -48,6 +50,11 @@ tokens = list(reserved.values()) + [
     'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS',
     'R_LLAVES', 'R_OTROS',
     'REGEX_SLASH',
+    'ID',
+    'INTEGER',
+    'FLOAT',
+    'STRING',
+    'BOOLEAN',
 ]
 
 #Operadores y comentarios Ricardo Asanza
@@ -86,4 +93,3 @@ t_Q_OTROS = r'%[qQ][^\w\s]'
 t_R_LLAVES = r'%r\{'
 t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
-
