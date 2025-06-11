@@ -93,3 +93,69 @@ t_Q_OTROS = r'%[qQ][^\w\s]'
 t_R_LLAVES = r'%r\{'
 t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
+
+#Variables y Tipos de datos Erick Danilo Armijos Romero
+
+#Implementacion de los tipos de datos promitivos  y variables
+
+def t_Id(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = reserved.get(t.value, 'ID')
+    return t
+
+def t_Float(t):
+    r'\d+\.\d+'
+    t.value = float(t.value)
+    return t
+
+def t_String(t):
+    r'"([^\\\n] | (\\.))*?"' 
+    t.value = t.value[1:-1]
+    return t
+
+def t_Integer(t):
+    r'\d+'
+    t.value = int(t.value)
+    return t
+
+
+
+def t_Boolean(t):
+    r'true|false'
+    t.value = True if t.value == 'true' else False
+    return t
+
+def t_Nil(t):
+    r'nil'
+    t.value = None
+    return t
+    
+#Implementacion para las estructuras de datos  
+    
+def t_Array(t):
+    r'\[.*\]'
+    return t
+
+def t_Hash(t):
+    r'\{.*\}'
+    return t
+
+def t_Set(t):
+    r'set.new\([^\)]*\)'
+    return t
+
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineo += len(t.value)
+    
+def t_error(t):
+    print(f"[Lexer] Linea {t.lineno}: caracter ilegal '{t.value[0]}'")
+    t.lexer.skip(1)
+    
+def t_Comment(t):
+    r'#.*'
+    pass
+
+def t_CommentarioMultiple(t):
+    r'=begin.*?=end'
+    pass
