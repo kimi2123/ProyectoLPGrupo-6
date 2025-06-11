@@ -38,6 +38,8 @@ reserved = {
 
 
 tokens = list(reserved.values()) + [
+    'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 'MAYORIGUAL', 'MENORIGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD'
+    'COMMENTARIO', 'B_COMMENTARIO',
     'PARENTESIS_IZ', 'PARENTESIS_DER',
     'LLAVE_IZ', 'LLAVE_DER',
     'CORCHETE_IZ', 'CORCHETE_DER',
@@ -48,7 +50,26 @@ tokens = list(reserved.values()) + [
     'REGEX_SLASH',
 ]
 
-
+#Operadores y comentarios Ricardo Asanza
+t_ANDAND = r'&&'
+t_OROR = r'\|\|'
+t_DIF = r'!'
+t_MASIGUAL = r'\+='
+t_MENOSIGUAL = r'-='
+t_IGUAL = r'='
+t_SUMA = r'\+'
+t_RESTA = r'\-'
+t_MULT = r'\*'
+t_DIV = r'\/'
+t_MOD = r'\%'
+t_IGUALIGUAL = r'=='
+t_DIFIGUAL = r'!='
+t_MAYOR = r'>'
+t_MENOR = r'<'
+t_MAYORIGUAL = r'>='
+t_MENORIGUAL = r'<='
+t_COMMENTARIO = r'#.*'
+t_B_COMMENTARIO = r'=begin.*?=end'
 t_PARENTESIS_IZ = r'\('
 t_PARENTESIS_DER = r'\)'
 t_LLAVE_IZ = r'\{'
@@ -65,3 +86,4 @@ t_Q_OTROS = r'%[qQ][^\w\s]'
 t_R_LLAVES = r'%r\{'
 t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
+
