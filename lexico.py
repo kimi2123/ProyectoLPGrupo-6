@@ -1,4 +1,10 @@
 import ply.lex as lex
+import datetime
+
+ruta_carpeta="logs"
+ruta_algoritmos="Algoritmos"
+noReconocidos=[]
+
 
 # Delimitadores y Palbras reservadas Luis Romero
 reserved = {
@@ -159,3 +165,4 @@ def t_Comment(t):
 def t_CommentarioMultiple(t):
     r'=begin.*?=end'
     pass
+
