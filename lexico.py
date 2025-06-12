@@ -1,4 +1,10 @@
 import ply.lex as lex
+import datetime
+
+ruta_carpeta="logs"
+ruta_algoritmos="Algoritmos"
+noReconocidos=[]
+
 
 # Delimitadores y Palbras reservadas Luis Romero
 reserved = {
@@ -159,3 +165,28 @@ def t_Comment(t):
 def t_CommentarioMultiple(t):
     r'=begin.*?=end'
     pass
+
+def log_function(lexer_instance, algoritmo_file, log_prefix):
+    string = ""
+    archivo = f"{ruta_algoritmos}/{algoritmo_file}"
+    ahora = datetime.datetime.now()
+    fecha_hora = ahora.strftime("%Y%m%d-%H%M%S") 
+    nombre_archivo = f"{log_prefix}-{fecha_hora}.txt"
+    
+    with open(archivo, 'r') as f:
+        contenido = f.read().strip()
+        lexer_instance.input(contenido)
+    
+    ruta_archivo = f"{ruta_carpeta}/{nombre_archivo}"
+    
+    while True:
+        tok = lexer_instance.token()
+        if not tok:
+            break
+        tipo = tok.type
+        valor = tok.value
+        valor_str = valor if isinstance(valor, str) else str(valor)
+        string = f"Token: tipo={tipo}, valor='{valor_str}'"
+        with open(ruta_archivo, "a+") as archivo_log:
+            archivo_log.write(string + '\n')
+    print(f"Resultado guardado en {ruta_archivo}")
