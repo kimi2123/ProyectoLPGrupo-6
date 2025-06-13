@@ -30,12 +30,7 @@ while contador < 5
 end
 
 for i in 1..6
-  puts "Iteración #{i}"
-end
-
-# Definición de función
-def saludo(nombre)
-  puts "Hola, #{nombre}!"
+  puts "Iteracion #{i}"
 end
 
 saludo("Carlos")
@@ -50,9 +45,9 @@ modulo = 10 % 3
 # Impresión de resultados
 puts "Resultado de la suma: #{suma}"
 puts "Resultado de la resta: #{resta}"
-puts "Resultado de la multiplicación: #{multiplicacion}"
-puts "Resultado de la división: #{division}"
-puts "Resultado del módulo: #{modulo}"
+puts "Resultado de la multiplicacion: #{multiplicacion}"
+puts "Resultado de la division: #{division}"
+puts "Resultado del modulo: #{modulo}"
 
 # Declaración de estructuras de datos
 arr = [1, 2, 3, 4, 5]

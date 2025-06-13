@@ -12,40 +12,23 @@ noReconocidos=[]
 reserved = {
     "true":"TRUE",
     "false":"FALSE",
-    "or":"OR",
-    "not":"NOT",
     "if":"IF",
     "return":"RETURN",
-    "class":"CLASS",
-    "module":"MODULE",
-    "self":"SELF",
-    "begin":"BEGIN",
     "else":"ELSE",
     "while":"WHILE",
-    "and":"AND",
     "in": "IN",
     "case": "CASE",
     "def": "DEF",
     "end": "END",
-    "printf": "PRINTF",
-    "to_f": "TO_F",
-    "concat": "CONCAT",
-    "initialize" : "INITIALIZE",
     "gets": "GETS",
-    "chomp": "CHOMP",
     "each":"EACH",
     "elsif": "ELSEIF",
     "until":"UNTIL",
     "for": "FOR",
-    "sort": "SORT",
     "puts": "PUTS",
     "print": "PRINT",
     "do": "DO",
-    "when" : "WHEN",
-    "nil" : "NIL",
-    "Array": "ARRAY",
-    "Hash":  "HASH",
-    "Set":   "SET",
+
 }
 
 
@@ -67,8 +50,9 @@ tokens = list(reserved.values()) + [
     'BOOLEAN',
     'COMA',
     'PIPE',
-    'ARRAY', 'ARRAY_CIERRE',
-    'HASH_IZ', 'HASH_DER', 'HASH_ARROBA','SET', 'SET_CIERRE',
+    'ARRAY',
+    'VALOR_HASH',
+    'HASH', 'SET',
     'NIL',
  ]
 
@@ -117,6 +101,10 @@ t_ignore = ' \t'
 
 #Implementacion de los tipos de datos promitivos  y variables
 
+def t_SET(t):
+    r'Set\.new\(\s*\[.*\]\s*\)' 
+    return t
+
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value, 'ID')
@@ -137,8 +125,6 @@ def t_INTEGER(t):
     t.value = int(t.value)
     return t
 
-
-
 def t_BOOLEAN(t):
     r'true|false'
     t.value = True if t.value == 'true' else False
@@ -149,45 +135,19 @@ def t_NIL(t):
     t.value = None
     return t
 
+def t_VALOR_HASH(t):
+    r'[a-zA-z0-9_]*\["[a-zA-Z_][a-zA-Z0-9_]*"\]'
+    t.type = 'ACCESO_HASH'
+    return t
 
 def t_ARRAY(t):
-    r'\['  # Detecta el corchete de apertura
-    t.type = 'PARENTESIS_IZ'  # Asignamos el tipo como corchete izquierdo
+    r'\[([^\[\]]|\s)*\]'  
     return t
 
-def t_ARRAY_CIERRE(t):
-    r'\]'  # Detecta el corchete de cierre
-    t.type = 'PARENTESIS_DER'  # Asignamos el tipo como corchete derecho
+def t_HASH(t):
+    r'\{[^}]*\}' 
+    t.type = 'HASH'
     return t
-
-# Para los Hash, detectamos las llaves y el operador '=>'
-def t_HASH_IZ(t):
-    r'\{'  # Detecta la llave de apertura
-    t.type = 'LLAVE_IZ'
-    return t
-
-def t_HASH_DER(t):
-    r'\}'  # Detecta la llave de cierre
-    t.type = 'LLAVE_DER'
-    return t
-
-def t_HASH_ARROBA(t):
-    r'=>'
-    t.type = 'ARROW'  # El operador de flecha
-    return t
-
-# Para Set, solo detectamos los paréntesis
-def t_SET(t):
-    r'set.new\('  # Detecta el inicio de un set
-    t.type = 'PARENTESIS_IZ'
-    return t
-
-def t_SET_CIERRE(t):
-    r'\)'  # Detecta el paréntesis de cierre
-    t.type = 'PARENTESIS_DER'
-    return t
-  
-# Manejo de espacios en blanco y saltos de linea
 
 def t_newline(t):
     r'\n+'
@@ -227,52 +187,11 @@ def log_function(lexer_instance, algoritmo_file, log_prefix):
 
     print(f"\nResultado guardado en {ruta_archivo}")
 
-def log_function(lexer_instance, algoritmo_file, log_prefix):
-    """
-    Analiza un archivo Ruby y guarda el listado de tokens en /logs.
-    
-    Parameters
-    ----------
-    lexer_instance : el lexer ya construido con lex.lex()
-    algoritmo_file : nombre de archivo Ruby (ej. 'algoritmo1.rb')
-    log_prefix     : prefijo del archivo de log (ej. 'lexico')
-    """
-
-    # 1) Ruta ABSOLUTA al .rb dentro de Algoritmos/
-    archivo_rb = os.path.join(os.path.dirname(__file__),
-                              ruta_algoritmos, algoritmo_file)
-
-    # 2) Crear carpeta logs/ si no existe
-    os.makedirs(os.path.join(os.path.dirname(__file__), ruta_carpeta),
-                exist_ok=True)
-
-    # 3) Nombre de log con fecha-hora
-    fecha_hora   = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-    nombre_log   = f"{log_prefix}-{fecha_hora}.txt"
-    ruta_log     = os.path.join(os.path.dirname(__file__),
-                                ruta_carpeta, nombre_log)
-
-    # 4) Cargar el código fuente en el lexer
-    with open(archivo_rb, 'r', encoding='utf8') as f:
-        lexer_instance.input(f.read())
-
-    # 5) Abrir log y volcar tokens
-    with open(ruta_log, "w", encoding='utf8') as archivo_log:
-        while True:
-            tok = lexer_instance.token()
-            if not tok:
-                break
-            linea = f"Token: tipo={tok.type:<15} valor={tok.value!r}"
-            print(linea)               # imprime en consola
-            archivo_log.write(linea+'\n')
-
-    print(f"\nResultado guardado en {ruta_log}")
-
 lexer = lex.lex()
 
 # ───────────────────────── Main de pruebas ─────────────────────────
 if __name__ == "__main__":
-    # Obtener todos los archivos .rb en orden alfabético
+    # Obtener todos los archivos .rb 
     algoritmos = sorted([os.path.basename(file_path) for file_path in glob.glob(os.path.join(os.path.dirname(__file__), ruta_algoritmos, "*.rb"))])
 
     # Procesar los archivos en orden
