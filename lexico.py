@@ -28,6 +28,7 @@ reserved = {
     "puts": "PUTS",
     "print": "PRINT",
     "do": "DO",
+    "nil": "NIL",
 
 }
 
@@ -54,6 +55,9 @@ tokens = list(reserved.values()) + [
     'VALOR_HASH',
     'HASH', 'SET',
     'NIL',
+    'ACCESO_HASH',
+    'INTERROGACION', 
+    'DOT',
  ]
 
 #Operadores y comentarios Ricardo Asanza
@@ -96,6 +100,7 @@ t_ARROW = r'=>'
 t_DOT = r'\.'
 t_COMA = r','
 t_PIPE = r'\|'
+t_INTERROGACION = r'\?'
 t_ignore = ' \t'
 #Variables y Tipos de datos Erick Danilo Armijos Romero
 
@@ -172,23 +177,29 @@ def log_function(lexer_instance, algoritmo_file, log_prefix):
     nombre_archivo = f"{log_prefix}-{fecha_hora}.txt"
     ruta_archivo = f"{ruta_carpeta}/{nombre_archivo}"
 
-    with open(archivo, 'r') as f:
-        contenido = f.read()
-        lexer_instance.input(contenido)
+    # Asegurarse de que el archivo se está abriendo correctamente
+    try:
+        with open(archivo, 'r') as f:
+            contenido = f.read()
+            lexer_instance.input(contenido)  # Se pasa todo el contenido al lexer
+    except FileNotFoundError:
+        print(f"[Error] No se encontró el archivo: {archivo}")
+        return
 
-    with open(ruta_archivo, "w") as archivo_log:
+    # Crear archivo de log
+    with open(ruta_archivo, "a") as archivo_log:
         while True:
-            tok = lexer_instance.token()
-            if not tok:
+            tok = lexer_instance.token()  # Obtener el siguiente token
+            if not tok:  # Si ya no hay más tokens
                 break
             output = f"Token: tipo={tok.type}, valor='{tok.value}'"
-            print(output)                        # ← Imprime en pantalla
-            archivo_log.write(output + '\n')     # ← Guarda en archivo
+            print(output)                        # Imprime en consola
+            archivo_log.write(output + '\n')     # Guarda en el archivo de log
 
     print(f"\nResultado guardado en {ruta_archivo}")
-
-lexer = lex.lex()
-
+  
+lexer = lex.lex()  # Crear el lexer    
+    
 # ───────────────────────── Main de pruebas ─────────────────────────
 if __name__ == "__main__":
     # Obtener todos los archivos .rb 
