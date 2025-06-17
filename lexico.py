@@ -3,64 +3,45 @@ import datetime
 import os
 import glob
 
-ruta_carpeta="logs"
-ruta_algoritmos="Algoritmos"
-noReconocidos=[]
+ruta_carpeta = "logs"
+ruta_algoritmos = "Algoritmos"
+noReconocidos = []
 
-
-# Delimitadores y Palbras reservadas Luis Romero
+# Delimitadores y Palabras reservadas Luis Romero
 reserved = {
-    "true":"TRUE",
-    "false":"FALSE",
-    "if":"IF",
-    "return":"RETURN",
-    "else":"ELSE",
-    "while":"WHILE",
+    "true": "TRUE",
+    "false": "FALSE",
+    "if": "IF",
+    "return": "RETURN",
+    "else": "ELSE",
+    "while": "WHILE",
     "in": "IN",
     "case": "CASE",
     "def": "DEF",
     "end": "END",
     "gets": "GETS",
-    "each":"EACH",
+    "each": "EACH",
     "elsif": "ELSEIF",
-    "until":"UNTIL",
+    "until": "UNTIL",
     "for": "FOR",
     "puts": "PUTS",
     "print": "PRINT",
     "do": "DO",
     "nil": "NIL",
-
 }
 
-
+# Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
 tokens = list(reserved.values()) + [
-    'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 'MAYORIGUAL', 'MENORIGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 'DOT',
-    'COMMENTARIO', 'B_COMMENTARIO',
-    'PARENTESIS_IZ', 'PARENTESIS_DER',
-    'LLAVE_IZ', 'LLAVE_DER',
-    'CORCHETE_IZ', 'CORCHETE_DER',
-    'COMILLA_S', 'COMILLA_D',
-    'INTERPOLACION',
-    'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS',
-    'R_LLAVES', 'R_OTROS',
-    'REGEX_SLASH',
-    'ID',
-    'INTEGER',
-    'FLOAT',
-    'STRING',
-    'BOOLEAN',
-    'COMA',
-    'PIPE',
-    'ARRAY',
-    'VALOR_HASH',
-    'HASH', 'SET',
-    'NIL',
-    'ACCESO_HASH',
-    'INTERROGACION', 
-    'DOT',
- ]
+    'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
+    'MAYORIGUAL', 'MENORIGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
+    'COMMENTARIO', 'B_COMMENTARIO', 'PARENTESIS_IZ', 'PARENTESIS_DER', 'LLAVE_IZ', 
+    'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER', 'COMILLA_S', 'COMILLA_D', 'INTERPOLACION', 
+    'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS', 'R_LLAVES', 'R_OTROS', 'REGEX_SLASH',
+    'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'ARRAY', 'VALOR_HASH', 'HASH', 'SET',
+    'ACCESO_HASH', 'INTERROGACION'
+]
 
-#Operadores y comentarios Ricardo Asanza
+# Operadores y comentarios Ricardo Asanza
 t_ANDAND = r'&&'
 t_OROR = r'\|\|'
 t_DIF = r'!'
@@ -86,8 +67,8 @@ t_LLAVE_IZ = r'\{'
 t_LLAVE_DER = r'\}'
 t_CORCHETE_IZ = r'\['
 t_CORCHETE_DER = r'\]'
-t_COMILLA_S = r'\''
-t_COMILLA_D = r'\"'
+t_COMILLA_S = r'\''  # Comillas simples
+t_COMILLA_D = r'\"'  # Comillas dobles
 t_INTERPOLACION = r'\#\{'
 t_Q_LLAVES = r'%[qQ]\{'
 t_Q_PARENTESIS = r'%[qQ]\('
@@ -97,15 +78,11 @@ t_R_LLAVES = r'%r\{'
 t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
 t_ARROW = r'=>'
-t_DOT = r'\.'
 t_COMA = r','
 t_PIPE = r'\|'
 t_INTERROGACION = r'\?'
-t_ignore = ' \t'
-#Variables y Tipos de datos Erick Danilo Armijos Romero
 
-#Implementacion de los tipos de datos promitivos  y variables
-
+# Variables y Tipos de datos Erick Danilo Armijos Romero
 def t_SET(t):
     r'Set\.new\(\s*\[.*\]\s*\)' 
     return t
@@ -161,7 +138,7 @@ def t_newline(t):
 def t_error(t):
     print(f"[Lexer] Linea {t.lineno}: caracter ilegal '{t.value[0]}'")
     t.lexer.skip(1)
-    
+
 def t_Comment(t):
     r'\#.*'
     pass
@@ -171,17 +148,20 @@ def t_CommentarioMultiple(t):
     pass
 
 def log_function(lexer_instance, algoritmo_file, log_prefix):
+    nombre_usuario = input("Por favor ingresa tu nombre: ")
+
+    # Definir las rutas de archivos y nombre
     archivo = f"{ruta_algoritmos}/{algoritmo_file}"
     ahora = datetime.datetime.now()
     fecha_hora = ahora.strftime("%Y%m%d-%H%M%S")
-    nombre_archivo = f"{log_prefix}-{fecha_hora}.txt"
+    nombre_archivo = f"{log_prefix}-{nombre_usuario}-{fecha_hora}.txt"
     ruta_archivo = f"{ruta_carpeta}/{nombre_archivo}"
 
     # Asegurarse de que el archivo se está abriendo correctamente
     try:
         with open(archivo, 'r') as f:
             contenido = f.read()
-            lexer_instance.input(contenido)  # Se pasa todo el contenido al lexer
+            lexer_instance.input(contenido)  
     except FileNotFoundError:
         print(f"[Error] No se encontró el archivo: {archivo}")
         return
@@ -189,17 +169,18 @@ def log_function(lexer_instance, algoritmo_file, log_prefix):
     # Crear archivo de log
     with open(ruta_archivo, "a") as archivo_log:
         while True:
-            tok = lexer_instance.token()  # Obtener el siguiente token
-            if not tok:  # Si ya no hay más tokens
+            tok = lexer_instance.token() 
+            if not tok: 
                 break
             output = f"Token: tipo={tok.type}, valor='{tok.value}'"
-            print(output)                        # Imprime en consola
-            archivo_log.write(output + '\n')     # Guarda en el archivo de log
+            print(output)                     
+            archivo_log.write(output + '\n')     
 
     print(f"\nResultado guardado en {ruta_archivo}")
+
   
-lexer = lex.lex()  # Crear el lexer    
-    
+lexer = lex.lex()    
+
 # ───────────────────────── Main de pruebas ─────────────────────────
 if __name__ == "__main__":
     # Obtener todos los archivos .rb 
