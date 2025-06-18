@@ -2,6 +2,7 @@ import ply.lex as lex
 import datetime
 import os
 import glob
+import datetime
 
 ruta_carpeta = "logs"
 ruta_algoritmos = "Algoritmos"
@@ -32,14 +33,14 @@ reserved = {
 
 # Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
 tokens = list(reserved.values()) + [
-    'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
+    'SET', 'NEW', 'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
     'MAYORIGUAL', 'MENORIGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
     'COMMENTARIO', 'B_COMMENTARIO', 'PARENTESIS_IZ', 'PARENTESIS_DER', 'LLAVE_IZ', 
     'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER', 'COMILLA_S', 'COMILLA_D', 'INTERPOLACION', 
     'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS', 'R_LLAVES', 'R_OTROS', 'REGEX_SLASH',
-    'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'ARRAY', 'VALOR_HASH', 'HASH', 'SET',
-    'ACCESO_HASH', 'INTERROGACION'
-]
+    'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'ARRAY', 'VALOR_HASH', 'HASH', 
+    'ACCESO_HASH', 'INTERROGACION', 'PUNTO'
+    ]
 
 # Operadores y comentarios Ricardo Asanza
 t_ANDAND = r'&&'
@@ -79,12 +80,21 @@ t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
 t_ARROW = r'=>'
 t_COMA = r','
+t_PUNTO = r'\.'
 t_PIPE = r'\|'
 t_INTERROGACION = r'\?'
+t_ignore = ' \t\n'
 
 # Variables y Tipos de datos Erick Danilo Armijos Romero
+
+def t_NEW(t):
+    r'\bnew\b'  # Detecta la palabra 'new'
+    t.type = 'NEW'
+    return t
+
 def t_SET(t):
-    r'Set\.new\(\s*\[.*\]\s*\)' 
+    r'\Set\b'  # Detecta la palabra 'set'
+    t.type = 'SET'
     return t
 
 def t_ID(t):
@@ -117,20 +127,6 @@ def t_NIL(t):
     t.value = None
     return t
 
-def t_VALOR_HASH(t):
-    r'[a-zA-z0-9_]*\["[a-zA-Z_][a-zA-Z0-9_]*"\]'
-    t.type = 'ACCESO_HASH'
-    return t
-
-def t_ARRAY(t):
-    r'\[([^\[\]]|\s)*\]'  
-    return t
-
-def t_HASH(t):
-    r'\{[^}]*\}' 
-    t.type = 'HASH'
-    return t
-
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -147,15 +143,12 @@ def t_CommentarioMultiple(t):
     r'=begin[\s\S]*?=end'
     pass
 
+
 def log_function(lexer_instance, algoritmo_file, log_prefix):
     nombre_usuario = input("Por favor ingresa tu nombre: ")
 
-    # Definir las rutas de archivos y nombre
-    archivo = f"{ruta_algoritmos}/{algoritmo_file}"
-    ahora = datetime.datetime.now()
-    fecha_hora = ahora.strftime("%Y%m%d-%H%M%S")
-    nombre_archivo = f"{log_prefix}-{nombre_usuario}-{fecha_hora}.txt"
-    ruta_archivo = f"{ruta_carpeta}/{nombre_archivo}"
+    # Construcción correcta de la ruta al archivo
+    archivo = os.path.join(os.path.dirname(__file__), ruta_algoritmos, algoritmo_file)
 
     # Asegurarse de que el archivo se está abriendo correctamente
     try:
@@ -167,14 +160,19 @@ def log_function(lexer_instance, algoritmo_file, log_prefix):
         return
 
     # Crear archivo de log
+    ahora = datetime.datetime.now()
+    fecha_hora = ahora.strftime("%Y%m%d-%H%M%S")
+    nombre_archivo = f"{log_prefix}-{nombre_usuario}-{fecha_hora}.txt"
+    ruta_archivo = os.path.join(os.path.dirname(__file__), ruta_carpeta, nombre_archivo)
+
     with open(ruta_archivo, "a") as archivo_log:
         while True:
             tok = lexer_instance.token() 
             if not tok: 
                 break
             output = f"Token: tipo={tok.type}, valor='{tok.value}'"
-            print(output)                     
-            archivo_log.write(output + '\n')     
+            print(output)  # Imprime en pantalla
+            archivo_log.write(output + '\n')  # Guarda en archivo
 
     print(f"\nResultado guardado en {ruta_archivo}")
 
