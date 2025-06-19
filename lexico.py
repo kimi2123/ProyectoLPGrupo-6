@@ -24,11 +24,12 @@ reserved = {
     "each": "EACH",
     "elsif": "ELSEIF",
     "until": "UNTIL",
-    "for": "FOR",
+    "for": "FOR",  
     "puts": "PUTS",
     "print": "PRINT",
     "do": "DO",
     "nil": "NIL",
+    "array": "ARRAY" 
 }
 
 # Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
@@ -40,9 +41,9 @@ tokens = list(reserved.values()) + [
     'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS', 'R_LLAVES', 'R_OTROS', 'REGEX_SLASH',
     'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'ARRAY', 'VALOR_HASH', 'HASH', 
     'ACCESO_HASH', 'INTERROGACION', 'PUNTO'
-    ]
+]
 
-# Operadores y comentarios Ricardo Asanza
+# Operadores y comentarios
 t_ANDAND = r'&&'
 t_OROR = r'\|\|'
 t_DIF = r'!'
@@ -108,7 +109,7 @@ def t_FLOAT(t):
     return t
 
 def t_STRING(t):
-    r'"([^\\\n] | (\\.))*?"' 
+    r'"([^\\\n] | (\\.))*?"'
     t.value = t.value[1:-1]
     return t
 
@@ -127,6 +128,12 @@ def t_NIL(t):
     t.value = None
     return t
 
+#Luis Romero
+def t_ARRAY(t):
+    r'\barray\b'
+    t.type = 'ARRAY'
+    return t
+
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -142,7 +149,6 @@ def t_Comment(t):
 def t_CommentarioMultiple(t):
     r'=begin[\s\S]*?=end'
     pass
-
 
 def log_function(lexer_instance, algoritmo_file, log_prefix):
     nombre_usuario = input("Por favor ingresa tu nombre: ")
@@ -176,7 +182,6 @@ def log_function(lexer_instance, algoritmo_file, log_prefix):
 
     print(f"\nResultado guardado en {ruta_archivo}")
 
-  
 lexer = lex.lex()    
 
 # ───────────────────────── Main de pruebas ─────────────────────────

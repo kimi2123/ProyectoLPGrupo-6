@@ -3,7 +3,7 @@ from lexico import lexer
 import datetime
 import os
 
-# Ruta para guardar los archivos de log de errores sinttacticos
+# Ruta para guardar los archivos de log de errores sintácticos
 ruta_carpeta = "logsErroresSintacticos"
 
 # Manejo de errores sintácticos
@@ -28,6 +28,25 @@ def p_error(t):
     # Registrar el error en el archivo de log
     with open(ruta_archivo, "a") as archivo_log:
         archivo_log.write(f"Error: {t.value}\n")
+
+# Luis Romero
+# Definir la producción para manejar la declaración de un array
+def p_declaracion_array(p):
+    'declaracion : ARRAY ID PARENTESIS_IZ expresion PARENTESIS_DER'
+    print(f"Array declarado: {p[2]} con valor {p[4]}")  # Imprime el nombre del array y su valor
+
+# Producción para manejar el uso del array (ejemplo de acceso a elementos)
+def p_acceso_array(p):
+    'acceso : ID PARENTESIS_IZ expresion PARENTESIS_DER'
+    print(f"Accediendo a {p[1]} en el índice {p[3]}")  # Accede al array usando un índice
+
+# Producción para el ciclo FOR
+def p_for_statement(p):
+    'for : FOR ID IN expresion DO statement END'
+    print(f"For loop detected: {p[1]} iterating over {p[3]}")
+    p[0] = f"Iterating over {p[3]}"
+
+# Continuar con las producciones adicionales para manejo de expresiones y sentencias
 
 # Crear el parser
 parser = yacc.yacc(module=None, debug=False, optimize=False)
