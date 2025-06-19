@@ -6,6 +6,60 @@ import os
 # Ruta para guardar los archivos de log de errores sintácticos
 ruta_carpeta = "logsErroresSintacticos"
 
+def p_asignacion(t):
+    'asignacion: ID IGUAL expresion'
+    t[0] = f"{t[1]} = {t[3]}"
+    
+def p_impresion(t):
+    '''impresion: PUTS " " expresion
+    | PRINT " " expresion'''
+    t[0] = f"Imprimir: {t[3]}"
+
+def p_funcion(t):
+    '''funcion: DEF ID PARENTESIS_IZ parametros PARENTESIS_DER 
+    cuerpo END'''
+    t[0] = f"Funcion: {t[2]} con los parametros {t[4]}"
+
+
+def p_parametros(t):
+    '''parametros: parametro 
+    | parametro COMA parametros'''
+    if len(t) == 2: 
+        t[0] = [t[1]]
+    else: 
+        t[0] = [t[1]] + t[3]    
+
+def p_parametro(t):
+    'parametro: ID'
+
+def p_set(t):
+    '''set: SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ expresion CORCHETE_DER PARENTESIS_DER'''
+
+def p_if(t):
+    '''if: condiciones 
+    cuerpo END'''
+    t[0] = f"La condicion es: {t[2]} con su codigo: {t[3]}"
+
+def p_ifelse(t):
+    '''ifelse: condiciones 
+    cuerpo ELSE cuerpo END'''
+    t[0] = "La condicion es: {t[2]} con el bloque if: {t[3]} y else:{t[5]}" 
+
+def p_expresion(t):
+    '''expresion: ID
+    | INTEGER
+    | FLOAT
+    | STRING
+    | BOOLEAN'''
+
+def p_cuerpo(t):
+    '''cuerpo: linea
+    | linea cuerpo'''
+
+def p_linea(t):
+    '''linea: impresion
+    | asignacion'''
+    
 # Manejo de errores sintácticos
 def p_error(t):
     # Si el error es un token, lo mostramos
