@@ -46,6 +46,15 @@ def p_for_statement(p):
     print(f"For loop detected: {p[1]} iterating over {p[3]}")
     p[0] = f"Iterating over {p[3]}"
 
+# Producción para el comando 'gets' (lectura desde el teclado)
+def p_gets(p):
+    'gets : GETS ID'
+    variable = p[2]
+    print(f"Ingrese el valor para {variable}: ", end="")
+    valor = input()  # Llamamos a input() para que el usuario ingrese un valor
+    print(f"Valor ingresado para {variable}: {valor}")
+    p[0] = valor  # Asignamos el valor ingresado a la variable
+
 # Continuar con las producciones adicionales para manejo de expresiones y sentencias
 
 # Crear el parser

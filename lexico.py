@@ -93,8 +93,13 @@ def t_NEW(t):
     t.type = 'NEW'
     return t
 
+def t_GETS(t):
+    r'\bgets\b' 
+    t.type = 'GETS' 
+    return t
+
 def t_SET(t):
-    r'\Set\b'  # Detecta la palabra 'set'
+    r'\Set\b' 
     t.type = 'SET'
     return t
 
@@ -145,6 +150,14 @@ def t_error(t):
 def t_Comment(t):
     r'\#.*'
     pass
+
+def p_gets(p):
+    'gets : GETS ID'
+    variable = p[2]
+    print(f"Ingrese el valor para {variable}: ", end="")
+    valor = input()  # Llamamos a input() para que el usuario ingrese un valor
+    print(f"Valor ingresado para {variable}: {valor}")
+    p[0] = valor  # Asignamos el valor ingresado a la variable
 
 def t_CommentarioMultiple(t):
     r'=begin[\s\S]*?=end'
