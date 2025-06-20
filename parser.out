@@ -1,0 +1,1326 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    ACCESO_HASH
+    ARRAY
+    ARROW
+    B_COMMENTARIO
+    CASE
+    COMILLA_D
+    COMILLA_S
+    COMMENTARIO
+    DIF
+    DIFIGUAL
+    DIV
+    DO
+    EACH
+    ELSEIF
+    FALSE
+    HASH
+    IGUALIGUAL
+    INTERPOLACION
+    INTERROGACION
+    LLAVE_DER
+    LLAVE_IZ
+    MASIGUAL
+    MAYOR
+    MAYORIGUAL
+    MENOR
+    MENORIGUAL
+    MENOSIGUAL
+    MOD
+    MULT
+    NEW
+    NIL
+    PIPE
+    PUNTO
+    Q_CORCHETES
+    Q_LLAVES
+    Q_OTROS
+    Q_PARENTESIS
+    REGEX_SLASH
+    RESTA
+    RETURN
+    R_LLAVES
+    R_OTROS
+    SET
+    SUMA
+    TRUE
+    UNTIL
+    VALOR_HASH
+    WHILE
+
+Grammar
+
+Rule 0     S' -> script
+Rule 1     script -> linea
+Rule 2     script -> linea script
+Rule 3     linea -> impresion
+Rule 4     linea -> asignacion
+Rule 5     linea -> declaracion_array
+Rule 6     linea -> acceso_array
+Rule 7     linea -> for_statement
+Rule 8     linea -> gets
+Rule 9     linea -> funcion
+Rule 10    linea -> if_statement
+Rule 11    linea -> ifelse_statement
+Rule 12    asignacion -> ID IGUAL expresion
+Rule 13    impresion -> PUTS expresion
+Rule 14    impresion -> PRINT expresion
+Rule 15    funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+Rule 16    parametros -> parametro
+Rule 17    parametros -> parametro COMA parametros
+Rule 18    parametro -> ID
+Rule 19    declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+Rule 20    acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER
+Rule 21    for_statement -> FOR ID IN expresion cuerpo END
+Rule 22    gets -> GETS ID
+Rule 23    if_statement -> IF condiciones cuerpo END
+Rule 24    ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END
+Rule 25    condiciones -> expresion
+Rule 26    condiciones -> condiciones ANDAND expresion
+Rule 27    condiciones -> condiciones OROR expresion
+Rule 28    cuerpo -> linea
+Rule 29    cuerpo -> linea cuerpo
+Rule 30    expresion -> ID
+Rule 31    expresion -> INTEGER
+Rule 32    expresion -> FLOAT
+Rule 33    expresion -> STRING
+Rule 34    expresion -> BOOLEAN
+Rule 35    elementos -> expresion
+Rule 36    elementos -> expresion COMA elementos
+
+Terminals, with rules where they appear
+
+ACCESO_HASH          : 
+ANDAND               : 26
+ARRAY                : 
+ARROW                : 
+BOOLEAN              : 34
+B_COMMENTARIO        : 
+CASE                 : 
+COMA                 : 17 36
+COMILLA_D            : 
+COMILLA_S            : 
+COMMENTARIO          : 
+CORCHETE_DER         : 19 20
+CORCHETE_IZ          : 19 20
+DEF                  : 15
+DIF                  : 
+DIFIGUAL             : 
+DIV                  : 
+DO                   : 
+EACH                 : 
+ELSE                 : 24
+ELSEIF               : 
+END                  : 15 21 23 24
+FALSE                : 
+FLOAT                : 32
+FOR                  : 21
+GETS                 : 22
+HASH                 : 
+ID                   : 12 15 18 19 20 21 22 30
+IF                   : 23 24
+IGUAL                : 12 19
+IGUALIGUAL           : 
+IN                   : 21
+INTEGER              : 31
+INTERPOLACION        : 
+INTERROGACION        : 
+LLAVE_DER            : 
+LLAVE_IZ             : 
+MASIGUAL             : 
+MAYOR                : 
+MAYORIGUAL           : 
+MENOR                : 
+MENORIGUAL           : 
+MENOSIGUAL           : 
+MOD                  : 
+MULT                 : 
+NEW                  : 
+NIL                  : 
+OROR                 : 27
+PARENTESIS_DER       : 15
+PARENTESIS_IZ        : 15
+PIPE                 : 
+PRINT                : 14
+PUNTO                : 
+PUTS                 : 13
+Q_CORCHETES          : 
+Q_LLAVES             : 
+Q_OTROS              : 
+Q_PARENTESIS         : 
+REGEX_SLASH          : 
+RESTA                : 
+RETURN               : 
+R_LLAVES             : 
+R_OTROS              : 
+SET                  : 
+STRING               : 33
+SUMA                 : 
+TRUE                 : 
+UNTIL                : 
+VALOR_HASH           : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+acceso_array         : 6
+asignacion           : 4
+condiciones          : 23 24 26 27
+cuerpo               : 15 21 23 24 24 29
+declaracion_array    : 5
+elementos            : 19 36
+expresion            : 12 13 14 20 21 25 26 27 35 36
+for_statement        : 7
+funcion              : 9
+gets                 : 8
+if_statement         : 10
+ifelse_statement     : 11
+impresion            : 3
+linea                : 1 2 28 29
+parametro            : 16 17
+parametros           : 15 17
+script               : 2 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . script
+    (1) script -> . linea
+    (2) script -> . linea script
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    script                         shift and go to state 1
+    linea                          shift and go to state 2
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 1
+
+    (0) S' -> script .
+
+
+
+state 2
+
+    (1) script -> linea .
+    (2) script -> linea . script
+    (1) script -> . linea
+    (2) script -> . linea script
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    $end            reduce using rule 1 (script -> linea .)
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    linea                          shift and go to state 2
+    script                         shift and go to state 19
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 3
+
+    (3) linea -> impresion .
+
+    PUTS            reduce using rule 3 (linea -> impresion .)
+    PRINT           reduce using rule 3 (linea -> impresion .)
+    ID              reduce using rule 3 (linea -> impresion .)
+    FOR             reduce using rule 3 (linea -> impresion .)
+    GETS            reduce using rule 3 (linea -> impresion .)
+    DEF             reduce using rule 3 (linea -> impresion .)
+    IF              reduce using rule 3 (linea -> impresion .)
+    $end            reduce using rule 3 (linea -> impresion .)
+    END             reduce using rule 3 (linea -> impresion .)
+    ELSE            reduce using rule 3 (linea -> impresion .)
+
+
+state 4
+
+    (4) linea -> asignacion .
+
+    PUTS            reduce using rule 4 (linea -> asignacion .)
+    PRINT           reduce using rule 4 (linea -> asignacion .)
+    ID              reduce using rule 4 (linea -> asignacion .)
+    FOR             reduce using rule 4 (linea -> asignacion .)
+    GETS            reduce using rule 4 (linea -> asignacion .)
+    DEF             reduce using rule 4 (linea -> asignacion .)
+    IF              reduce using rule 4 (linea -> asignacion .)
+    $end            reduce using rule 4 (linea -> asignacion .)
+    END             reduce using rule 4 (linea -> asignacion .)
+    ELSE            reduce using rule 4 (linea -> asignacion .)
+
+
+state 5
+
+    (5) linea -> declaracion_array .
+
+    PUTS            reduce using rule 5 (linea -> declaracion_array .)
+    PRINT           reduce using rule 5 (linea -> declaracion_array .)
+    ID              reduce using rule 5 (linea -> declaracion_array .)
+    FOR             reduce using rule 5 (linea -> declaracion_array .)
+    GETS            reduce using rule 5 (linea -> declaracion_array .)
+    DEF             reduce using rule 5 (linea -> declaracion_array .)
+    IF              reduce using rule 5 (linea -> declaracion_array .)
+    $end            reduce using rule 5 (linea -> declaracion_array .)
+    END             reduce using rule 5 (linea -> declaracion_array .)
+    ELSE            reduce using rule 5 (linea -> declaracion_array .)
+
+
+state 6
+
+    (6) linea -> acceso_array .
+
+    PUTS            reduce using rule 6 (linea -> acceso_array .)
+    PRINT           reduce using rule 6 (linea -> acceso_array .)
+    ID              reduce using rule 6 (linea -> acceso_array .)
+    FOR             reduce using rule 6 (linea -> acceso_array .)
+    GETS            reduce using rule 6 (linea -> acceso_array .)
+    DEF             reduce using rule 6 (linea -> acceso_array .)
+    IF              reduce using rule 6 (linea -> acceso_array .)
+    $end            reduce using rule 6 (linea -> acceso_array .)
+    END             reduce using rule 6 (linea -> acceso_array .)
+    ELSE            reduce using rule 6 (linea -> acceso_array .)
+
+
+state 7
+
+    (7) linea -> for_statement .
+
+    PUTS            reduce using rule 7 (linea -> for_statement .)
+    PRINT           reduce using rule 7 (linea -> for_statement .)
+    ID              reduce using rule 7 (linea -> for_statement .)
+    FOR             reduce using rule 7 (linea -> for_statement .)
+    GETS            reduce using rule 7 (linea -> for_statement .)
+    DEF             reduce using rule 7 (linea -> for_statement .)
+    IF              reduce using rule 7 (linea -> for_statement .)
+    $end            reduce using rule 7 (linea -> for_statement .)
+    END             reduce using rule 7 (linea -> for_statement .)
+    ELSE            reduce using rule 7 (linea -> for_statement .)
+
+
+state 8
+
+    (8) linea -> gets .
+
+    PUTS            reduce using rule 8 (linea -> gets .)
+    PRINT           reduce using rule 8 (linea -> gets .)
+    ID              reduce using rule 8 (linea -> gets .)
+    FOR             reduce using rule 8 (linea -> gets .)
+    GETS            reduce using rule 8 (linea -> gets .)
+    DEF             reduce using rule 8 (linea -> gets .)
+    IF              reduce using rule 8 (linea -> gets .)
+    $end            reduce using rule 8 (linea -> gets .)
+    END             reduce using rule 8 (linea -> gets .)
+    ELSE            reduce using rule 8 (linea -> gets .)
+
+
+state 9
+
+    (9) linea -> funcion .
+
+    PUTS            reduce using rule 9 (linea -> funcion .)
+    PRINT           reduce using rule 9 (linea -> funcion .)
+    ID              reduce using rule 9 (linea -> funcion .)
+    FOR             reduce using rule 9 (linea -> funcion .)
+    GETS            reduce using rule 9 (linea -> funcion .)
+    DEF             reduce using rule 9 (linea -> funcion .)
+    IF              reduce using rule 9 (linea -> funcion .)
+    $end            reduce using rule 9 (linea -> funcion .)
+    END             reduce using rule 9 (linea -> funcion .)
+    ELSE            reduce using rule 9 (linea -> funcion .)
+
+
+state 10
+
+    (10) linea -> if_statement .
+
+    PUTS            reduce using rule 10 (linea -> if_statement .)
+    PRINT           reduce using rule 10 (linea -> if_statement .)
+    ID              reduce using rule 10 (linea -> if_statement .)
+    FOR             reduce using rule 10 (linea -> if_statement .)
+    GETS            reduce using rule 10 (linea -> if_statement .)
+    DEF             reduce using rule 10 (linea -> if_statement .)
+    IF              reduce using rule 10 (linea -> if_statement .)
+    $end            reduce using rule 10 (linea -> if_statement .)
+    END             reduce using rule 10 (linea -> if_statement .)
+    ELSE            reduce using rule 10 (linea -> if_statement .)
+
+
+state 11
+
+    (11) linea -> ifelse_statement .
+
+    PUTS            reduce using rule 11 (linea -> ifelse_statement .)
+    PRINT           reduce using rule 11 (linea -> ifelse_statement .)
+    ID              reduce using rule 11 (linea -> ifelse_statement .)
+    FOR             reduce using rule 11 (linea -> ifelse_statement .)
+    GETS            reduce using rule 11 (linea -> ifelse_statement .)
+    DEF             reduce using rule 11 (linea -> ifelse_statement .)
+    IF              reduce using rule 11 (linea -> ifelse_statement .)
+    $end            reduce using rule 11 (linea -> ifelse_statement .)
+    END             reduce using rule 11 (linea -> ifelse_statement .)
+    ELSE            reduce using rule 11 (linea -> ifelse_statement .)
+
+
+state 12
+
+    (13) impresion -> PUTS . expresion
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 20
+
+state 13
+
+    (14) impresion -> PRINT . expresion
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 26
+
+state 14
+
+    (12) asignacion -> ID . IGUAL expresion
+    (19) declaracion_array -> ID . IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> ID . CORCHETE_IZ expresion CORCHETE_DER
+
+    IGUAL           shift and go to state 27
+    CORCHETE_IZ     shift and go to state 28
+
+
+state 15
+
+    (21) for_statement -> FOR . ID IN expresion cuerpo END
+
+    ID              shift and go to state 29
+
+
+state 16
+
+    (22) gets -> GETS . ID
+
+    ID              shift and go to state 30
+
+
+state 17
+
+    (15) funcion -> DEF . ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+
+    ID              shift and go to state 31
+
+
+state 18
+
+    (23) if_statement -> IF . condiciones cuerpo END
+    (24) ifelse_statement -> IF . condiciones cuerpo ELSE cuerpo END
+    (25) condiciones -> . expresion
+    (26) condiciones -> . condiciones ANDAND expresion
+    (27) condiciones -> . condiciones OROR expresion
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    condiciones                    shift and go to state 32
+    expresion                      shift and go to state 33
+
+state 19
+
+    (2) script -> linea script .
+
+    $end            reduce using rule 2 (script -> linea script .)
+
+
+state 20
+
+    (13) impresion -> PUTS expresion .
+
+    PUTS            reduce using rule 13 (impresion -> PUTS expresion .)
+    PRINT           reduce using rule 13 (impresion -> PUTS expresion .)
+    ID              reduce using rule 13 (impresion -> PUTS expresion .)
+    FOR             reduce using rule 13 (impresion -> PUTS expresion .)
+    GETS            reduce using rule 13 (impresion -> PUTS expresion .)
+    DEF             reduce using rule 13 (impresion -> PUTS expresion .)
+    IF              reduce using rule 13 (impresion -> PUTS expresion .)
+    $end            reduce using rule 13 (impresion -> PUTS expresion .)
+    END             reduce using rule 13 (impresion -> PUTS expresion .)
+    ELSE            reduce using rule 13 (impresion -> PUTS expresion .)
+
+
+state 21
+
+    (30) expresion -> ID .
+
+    PUTS            reduce using rule 30 (expresion -> ID .)
+    PRINT           reduce using rule 30 (expresion -> ID .)
+    ID              reduce using rule 30 (expresion -> ID .)
+    FOR             reduce using rule 30 (expresion -> ID .)
+    GETS            reduce using rule 30 (expresion -> ID .)
+    DEF             reduce using rule 30 (expresion -> ID .)
+    IF              reduce using rule 30 (expresion -> ID .)
+    $end            reduce using rule 30 (expresion -> ID .)
+    END             reduce using rule 30 (expresion -> ID .)
+    ELSE            reduce using rule 30 (expresion -> ID .)
+    ANDAND          reduce using rule 30 (expresion -> ID .)
+    OROR            reduce using rule 30 (expresion -> ID .)
+    CORCHETE_DER    reduce using rule 30 (expresion -> ID .)
+    COMA            reduce using rule 30 (expresion -> ID .)
+
+
+state 22
+
+    (31) expresion -> INTEGER .
+
+    PUTS            reduce using rule 31 (expresion -> INTEGER .)
+    PRINT           reduce using rule 31 (expresion -> INTEGER .)
+    ID              reduce using rule 31 (expresion -> INTEGER .)
+    FOR             reduce using rule 31 (expresion -> INTEGER .)
+    GETS            reduce using rule 31 (expresion -> INTEGER .)
+    DEF             reduce using rule 31 (expresion -> INTEGER .)
+    IF              reduce using rule 31 (expresion -> INTEGER .)
+    $end            reduce using rule 31 (expresion -> INTEGER .)
+    END             reduce using rule 31 (expresion -> INTEGER .)
+    ELSE            reduce using rule 31 (expresion -> INTEGER .)
+    ANDAND          reduce using rule 31 (expresion -> INTEGER .)
+    OROR            reduce using rule 31 (expresion -> INTEGER .)
+    CORCHETE_DER    reduce using rule 31 (expresion -> INTEGER .)
+    COMA            reduce using rule 31 (expresion -> INTEGER .)
+
+
+state 23
+
+    (32) expresion -> FLOAT .
+
+    PUTS            reduce using rule 32 (expresion -> FLOAT .)
+    PRINT           reduce using rule 32 (expresion -> FLOAT .)
+    ID              reduce using rule 32 (expresion -> FLOAT .)
+    FOR             reduce using rule 32 (expresion -> FLOAT .)
+    GETS            reduce using rule 32 (expresion -> FLOAT .)
+    DEF             reduce using rule 32 (expresion -> FLOAT .)
+    IF              reduce using rule 32 (expresion -> FLOAT .)
+    $end            reduce using rule 32 (expresion -> FLOAT .)
+    END             reduce using rule 32 (expresion -> FLOAT .)
+    ELSE            reduce using rule 32 (expresion -> FLOAT .)
+    ANDAND          reduce using rule 32 (expresion -> FLOAT .)
+    OROR            reduce using rule 32 (expresion -> FLOAT .)
+    CORCHETE_DER    reduce using rule 32 (expresion -> FLOAT .)
+    COMA            reduce using rule 32 (expresion -> FLOAT .)
+
+
+state 24
+
+    (33) expresion -> STRING .
+
+    PUTS            reduce using rule 33 (expresion -> STRING .)
+    PRINT           reduce using rule 33 (expresion -> STRING .)
+    ID              reduce using rule 33 (expresion -> STRING .)
+    FOR             reduce using rule 33 (expresion -> STRING .)
+    GETS            reduce using rule 33 (expresion -> STRING .)
+    DEF             reduce using rule 33 (expresion -> STRING .)
+    IF              reduce using rule 33 (expresion -> STRING .)
+    $end            reduce using rule 33 (expresion -> STRING .)
+    END             reduce using rule 33 (expresion -> STRING .)
+    ELSE            reduce using rule 33 (expresion -> STRING .)
+    ANDAND          reduce using rule 33 (expresion -> STRING .)
+    OROR            reduce using rule 33 (expresion -> STRING .)
+    CORCHETE_DER    reduce using rule 33 (expresion -> STRING .)
+    COMA            reduce using rule 33 (expresion -> STRING .)
+
+
+state 25
+
+    (34) expresion -> BOOLEAN .
+
+    PUTS            reduce using rule 34 (expresion -> BOOLEAN .)
+    PRINT           reduce using rule 34 (expresion -> BOOLEAN .)
+    ID              reduce using rule 34 (expresion -> BOOLEAN .)
+    FOR             reduce using rule 34 (expresion -> BOOLEAN .)
+    GETS            reduce using rule 34 (expresion -> BOOLEAN .)
+    DEF             reduce using rule 34 (expresion -> BOOLEAN .)
+    IF              reduce using rule 34 (expresion -> BOOLEAN .)
+    $end            reduce using rule 34 (expresion -> BOOLEAN .)
+    END             reduce using rule 34 (expresion -> BOOLEAN .)
+    ELSE            reduce using rule 34 (expresion -> BOOLEAN .)
+    ANDAND          reduce using rule 34 (expresion -> BOOLEAN .)
+    OROR            reduce using rule 34 (expresion -> BOOLEAN .)
+    CORCHETE_DER    reduce using rule 34 (expresion -> BOOLEAN .)
+    COMA            reduce using rule 34 (expresion -> BOOLEAN .)
+
+
+state 26
+
+    (14) impresion -> PRINT expresion .
+
+    PUTS            reduce using rule 14 (impresion -> PRINT expresion .)
+    PRINT           reduce using rule 14 (impresion -> PRINT expresion .)
+    ID              reduce using rule 14 (impresion -> PRINT expresion .)
+    FOR             reduce using rule 14 (impresion -> PRINT expresion .)
+    GETS            reduce using rule 14 (impresion -> PRINT expresion .)
+    DEF             reduce using rule 14 (impresion -> PRINT expresion .)
+    IF              reduce using rule 14 (impresion -> PRINT expresion .)
+    $end            reduce using rule 14 (impresion -> PRINT expresion .)
+    END             reduce using rule 14 (impresion -> PRINT expresion .)
+    ELSE            reduce using rule 14 (impresion -> PRINT expresion .)
+
+
+state 27
+
+    (12) asignacion -> ID IGUAL . expresion
+    (19) declaracion_array -> ID IGUAL . CORCHETE_IZ elementos CORCHETE_DER
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    CORCHETE_IZ     shift and go to state 35
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 34
+
+state 28
+
+    (20) acceso_array -> ID CORCHETE_IZ . expresion CORCHETE_DER
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 36
+
+state 29
+
+    (21) for_statement -> FOR ID . IN expresion cuerpo END
+
+    IN              shift and go to state 37
+
+
+state 30
+
+    (22) gets -> GETS ID .
+
+    PUTS            reduce using rule 22 (gets -> GETS ID .)
+    PRINT           reduce using rule 22 (gets -> GETS ID .)
+    ID              reduce using rule 22 (gets -> GETS ID .)
+    FOR             reduce using rule 22 (gets -> GETS ID .)
+    GETS            reduce using rule 22 (gets -> GETS ID .)
+    DEF             reduce using rule 22 (gets -> GETS ID .)
+    IF              reduce using rule 22 (gets -> GETS ID .)
+    $end            reduce using rule 22 (gets -> GETS ID .)
+    END             reduce using rule 22 (gets -> GETS ID .)
+    ELSE            reduce using rule 22 (gets -> GETS ID .)
+
+
+state 31
+
+    (15) funcion -> DEF ID . PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+
+    PARENTESIS_IZ   shift and go to state 38
+
+
+state 32
+
+    (23) if_statement -> IF condiciones . cuerpo END
+    (24) ifelse_statement -> IF condiciones . cuerpo ELSE cuerpo END
+    (26) condiciones -> condiciones . ANDAND expresion
+    (27) condiciones -> condiciones . OROR expresion
+    (28) cuerpo -> . linea
+    (29) cuerpo -> . linea cuerpo
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    ANDAND          shift and go to state 40
+    OROR            shift and go to state 41
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    cuerpo                         shift and go to state 39
+    linea                          shift and go to state 42
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 33
+
+    (25) condiciones -> expresion .
+
+    ANDAND          reduce using rule 25 (condiciones -> expresion .)
+    OROR            reduce using rule 25 (condiciones -> expresion .)
+    PUTS            reduce using rule 25 (condiciones -> expresion .)
+    PRINT           reduce using rule 25 (condiciones -> expresion .)
+    ID              reduce using rule 25 (condiciones -> expresion .)
+    FOR             reduce using rule 25 (condiciones -> expresion .)
+    GETS            reduce using rule 25 (condiciones -> expresion .)
+    DEF             reduce using rule 25 (condiciones -> expresion .)
+    IF              reduce using rule 25 (condiciones -> expresion .)
+
+
+state 34
+
+    (12) asignacion -> ID IGUAL expresion .
+
+    PUTS            reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    PRINT           reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    ID              reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    FOR             reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    GETS            reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    DEF             reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    IF              reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    $end            reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    END             reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+    ELSE            reduce using rule 12 (asignacion -> ID IGUAL expresion .)
+
+
+state 35
+
+    (19) declaracion_array -> ID IGUAL CORCHETE_IZ . elementos CORCHETE_DER
+    (35) elementos -> . expresion
+    (36) elementos -> . expresion COMA elementos
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    elementos                      shift and go to state 43
+    expresion                      shift and go to state 44
+
+state 36
+
+    (20) acceso_array -> ID CORCHETE_IZ expresion . CORCHETE_DER
+
+    CORCHETE_DER    shift and go to state 45
+
+
+state 37
+
+    (21) for_statement -> FOR ID IN . expresion cuerpo END
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 46
+
+state 38
+
+    (15) funcion -> DEF ID PARENTESIS_IZ . parametros PARENTESIS_DER cuerpo END
+    (16) parametros -> . parametro
+    (17) parametros -> . parametro COMA parametros
+    (18) parametro -> . ID
+
+    ID              shift and go to state 47
+
+    parametros                     shift and go to state 48
+    parametro                      shift and go to state 49
+
+state 39
+
+    (23) if_statement -> IF condiciones cuerpo . END
+    (24) ifelse_statement -> IF condiciones cuerpo . ELSE cuerpo END
+
+    END             shift and go to state 50
+    ELSE            shift and go to state 51
+
+
+state 40
+
+    (26) condiciones -> condiciones ANDAND . expresion
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 52
+
+state 41
+
+    (27) condiciones -> condiciones OROR . expresion
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 53
+
+state 42
+
+    (28) cuerpo -> linea .
+    (29) cuerpo -> linea . cuerpo
+    (28) cuerpo -> . linea
+    (29) cuerpo -> . linea cuerpo
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    END             reduce using rule 28 (cuerpo -> linea .)
+    ELSE            reduce using rule 28 (cuerpo -> linea .)
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    linea                          shift and go to state 42
+    cuerpo                         shift and go to state 54
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 43
+
+    (19) declaracion_array -> ID IGUAL CORCHETE_IZ elementos . CORCHETE_DER
+
+    CORCHETE_DER    shift and go to state 55
+
+
+state 44
+
+    (35) elementos -> expresion .
+    (36) elementos -> expresion . COMA elementos
+
+    CORCHETE_DER    reduce using rule 35 (elementos -> expresion .)
+    COMA            shift and go to state 56
+
+
+state 45
+
+    (20) acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .
+
+    PUTS            reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    PRINT           reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    ID              reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    FOR             reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    GETS            reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    DEF             reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    IF              reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    $end            reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    END             reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+    ELSE            reduce using rule 20 (acceso_array -> ID CORCHETE_IZ expresion CORCHETE_DER .)
+
+
+state 46
+
+    (21) for_statement -> FOR ID IN expresion . cuerpo END
+    (28) cuerpo -> . linea
+    (29) cuerpo -> . linea cuerpo
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    cuerpo                         shift and go to state 57
+    linea                          shift and go to state 42
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 47
+
+    (18) parametro -> ID .
+
+    COMA            reduce using rule 18 (parametro -> ID .)
+    PARENTESIS_DER  reduce using rule 18 (parametro -> ID .)
+
+
+state 48
+
+    (15) funcion -> DEF ID PARENTESIS_IZ parametros . PARENTESIS_DER cuerpo END
+
+    PARENTESIS_DER  shift and go to state 58
+
+
+state 49
+
+    (16) parametros -> parametro .
+    (17) parametros -> parametro . COMA parametros
+
+    PARENTESIS_DER  reduce using rule 16 (parametros -> parametro .)
+    COMA            shift and go to state 59
+
+
+state 50
+
+    (23) if_statement -> IF condiciones cuerpo END .
+
+    PUTS            reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    PRINT           reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    ID              reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    FOR             reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    GETS            reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    DEF             reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    IF              reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    $end            reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    END             reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+    ELSE            reduce using rule 23 (if_statement -> IF condiciones cuerpo END .)
+
+
+state 51
+
+    (24) ifelse_statement -> IF condiciones cuerpo ELSE . cuerpo END
+    (28) cuerpo -> . linea
+    (29) cuerpo -> . linea cuerpo
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    cuerpo                         shift and go to state 60
+    linea                          shift and go to state 42
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 52
+
+    (26) condiciones -> condiciones ANDAND expresion .
+
+    ANDAND          reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    OROR            reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    PUTS            reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    PRINT           reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    ID              reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    FOR             reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    GETS            reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    DEF             reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+    IF              reduce using rule 26 (condiciones -> condiciones ANDAND expresion .)
+
+
+state 53
+
+    (27) condiciones -> condiciones OROR expresion .
+
+    ANDAND          reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    OROR            reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    PUTS            reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    PRINT           reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    ID              reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    FOR             reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    GETS            reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    DEF             reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+    IF              reduce using rule 27 (condiciones -> condiciones OROR expresion .)
+
+
+state 54
+
+    (29) cuerpo -> linea cuerpo .
+
+    END             reduce using rule 29 (cuerpo -> linea cuerpo .)
+    ELSE            reduce using rule 29 (cuerpo -> linea cuerpo .)
+
+
+state 55
+
+    (19) declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .
+
+    PUTS            reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    PRINT           reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    ID              reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    FOR             reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    GETS            reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    DEF             reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    IF              reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    $end            reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    END             reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+    ELSE            reduce using rule 19 (declaracion_array -> ID IGUAL CORCHETE_IZ elementos CORCHETE_DER .)
+
+
+state 56
+
+    (36) elementos -> expresion COMA . elementos
+    (35) elementos -> . expresion
+    (36) elementos -> . expresion COMA elementos
+    (30) expresion -> . ID
+    (31) expresion -> . INTEGER
+    (32) expresion -> . FLOAT
+    (33) expresion -> . STRING
+    (34) expresion -> . BOOLEAN
+
+    ID              shift and go to state 21
+    INTEGER         shift and go to state 22
+    FLOAT           shift and go to state 23
+    STRING          shift and go to state 24
+    BOOLEAN         shift and go to state 25
+
+    expresion                      shift and go to state 44
+    elementos                      shift and go to state 61
+
+state 57
+
+    (21) for_statement -> FOR ID IN expresion cuerpo . END
+
+    END             shift and go to state 62
+
+
+state 58
+
+    (15) funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER . cuerpo END
+    (28) cuerpo -> . linea
+    (29) cuerpo -> . linea cuerpo
+    (3) linea -> . impresion
+    (4) linea -> . asignacion
+    (5) linea -> . declaracion_array
+    (6) linea -> . acceso_array
+    (7) linea -> . for_statement
+    (8) linea -> . gets
+    (9) linea -> . funcion
+    (10) linea -> . if_statement
+    (11) linea -> . ifelse_statement
+    (13) impresion -> . PUTS expresion
+    (14) impresion -> . PRINT expresion
+    (12) asignacion -> . ID IGUAL expresion
+    (19) declaracion_array -> . ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    (20) acceso_array -> . ID CORCHETE_IZ expresion CORCHETE_DER
+    (21) for_statement -> . FOR ID IN expresion cuerpo END
+    (22) gets -> . GETS ID
+    (15) funcion -> . DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END
+    (23) if_statement -> . IF condiciones cuerpo END
+    (24) ifelse_statement -> . IF condiciones cuerpo ELSE cuerpo END
+
+    PUTS            shift and go to state 12
+    PRINT           shift and go to state 13
+    ID              shift and go to state 14
+    FOR             shift and go to state 15
+    GETS            shift and go to state 16
+    DEF             shift and go to state 17
+    IF              shift and go to state 18
+
+    cuerpo                         shift and go to state 63
+    linea                          shift and go to state 42
+    impresion                      shift and go to state 3
+    asignacion                     shift and go to state 4
+    declaracion_array              shift and go to state 5
+    acceso_array                   shift and go to state 6
+    for_statement                  shift and go to state 7
+    gets                           shift and go to state 8
+    funcion                        shift and go to state 9
+    if_statement                   shift and go to state 10
+    ifelse_statement               shift and go to state 11
+
+state 59
+
+    (17) parametros -> parametro COMA . parametros
+    (16) parametros -> . parametro
+    (17) parametros -> . parametro COMA parametros
+    (18) parametro -> . ID
+
+    ID              shift and go to state 47
+
+    parametro                      shift and go to state 49
+    parametros                     shift and go to state 64
+
+state 60
+
+    (24) ifelse_statement -> IF condiciones cuerpo ELSE cuerpo . END
+
+    END             shift and go to state 65
+
+
+state 61
+
+    (36) elementos -> expresion COMA elementos .
+
+    CORCHETE_DER    reduce using rule 36 (elementos -> expresion COMA elementos .)
+
+
+state 62
+
+    (21) for_statement -> FOR ID IN expresion cuerpo END .
+
+    PUTS            reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    PRINT           reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    ID              reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    FOR             reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    GETS            reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    DEF             reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    IF              reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    $end            reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    END             reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+    ELSE            reduce using rule 21 (for_statement -> FOR ID IN expresion cuerpo END .)
+
+
+state 63
+
+    (15) funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo . END
+
+    END             shift and go to state 66
+
+
+state 64
+
+    (17) parametros -> parametro COMA parametros .
+
+    PARENTESIS_DER  reduce using rule 17 (parametros -> parametro COMA parametros .)
+
+
+state 65
+
+    (24) ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .
+
+    PUTS            reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    PRINT           reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    ID              reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    FOR             reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    GETS            reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    DEF             reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    IF              reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    $end            reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    END             reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+    ELSE            reduce using rule 24 (ifelse_statement -> IF condiciones cuerpo ELSE cuerpo END .)
+
+
+state 66
+
+    (15) funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .
+
+    PUTS            reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    PRINT           reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    ID              reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    FOR             reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    GETS            reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    DEF             reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    IF              reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    $end            reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    END             reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+    ELSE            reduce using rule 15 (funcion -> DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END .)
+

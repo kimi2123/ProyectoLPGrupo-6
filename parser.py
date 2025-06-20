@@ -1,276 +1,218 @@
 import ply.yacc as yacc
-from lexico import lexer
+from lexico import tokens, lexer
 import datetime
 import os
 
-
-# Ruta para guardar los archivos de log de errores sintácticos
+# Directorio para logs de errores sintácticos
 ruta_carpeta = "logsErroresSintacticos"
 
+# Precedencia de operadores
 precedence = (
     ('left', 'OROR'),
     ('left', 'ANDAND'),
-    ('left', 'DIF'),
+    ('left', 'IGUALIGUAL', 'DIFIGUAL'),
+    ('left', 'MAYORIGUAL', 'MENORIGUAL', 'MAYOR', 'MENOR'),
     ('left', 'SUMA', 'RESTA'),
     ('left', 'MULT', 'DIV', 'MOD'),
 )
 
-#PARTE ERICK ARMIJOS 
-#expresiones aritméticas con uno o más operadores
+# Símbolo de inicio
+start = 'cuerpo'
 
-def p_suma(t):
-    '''suma: operacionSuma
-            | operacionSuma suma'''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        t[0] = t[1] + t[2]
-        
-def p_operacionSuma(t):
-    '''operacionSuma: factor SUMA factor'''
-    t[0] = t[1] + t[3]  
+# ----------------------
+# Reglas del parser
+# ----------------------
 
-def p_resta(t):
-    '''resta: operacionResta
-            | operacionResta resta'''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        t[0] = t[1] - t[2]
-
-def p_operacionResta(t):
-    '''operacionResta: factor RESTA factor'''
-    t[0] = t[1] - t[3]
-                
-        
-def p_multiplicacion(t):
-    '''multiplicacion: operacionMultiplicacion
-                     | operacionMultiplicacion multiplicacion'''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        t[0] = t[1] * t[2]
-
-def p_operacionMultiplicacion(t):
-    '''operacionMultiplicacion: factor MULT factor'''
-    t[0] = t[1] * t[3]
-
-def p_division(t):
-    '''division: operacionDivision
-               | operacionDivision division'''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        t[0] = t[1] / t[2]
-
-def p_operacionDivision(t):
-    '''operacionDivision: factor DIV factor'''
-    t[0] = t[1] / t[3]
-
-def p_modulo(t):
-    '''modulo: operacionModulo
-             | operacionModulo modulo'''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        t[0] = t[1] % t[2]
- 
-def p_operacionModulo(t):
-    '''operacionModulo: factor MOD factor'''
-    t[0] = t[1] % t[3]                
-   
-def p_factor(t):
-    '''factor: INTEGER
-            | FLOAT'''
-    if '.' in t[1]:
-        t[0] = float(t[1])
-    else:
-        t[0] = int(t[1])
-        
-'''
-def p_signos(t):
-    signos: 'SUMA'
-             | 'RESTA' 
-def p_operacionMultiple(t):
-     ''operacionMultiple: factor signos factor''
-    t[0] = t[1] + t[3]''' 
-    
-#condiciones con uno o más conectores lógicos
-
-def p_negacion(t):
-    '''factor: DIF factor '''
-    t[0] = not t[2]
-
-def p_conectorAND(t):
-    '''conectorAND: factor
-                | factor ANDAND conectorAND'''
-    if len(t) == 4:
-        t[0] = t[1] and t[3]
-    else:
-        t[0] = t[1]
+def p_cuerpo(p):
+    '''cuerpo : linea
+              | linea cuerpo'''
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 
 
-def p_conectorOR(t):
-    '''conectorOR: conectorAND
-                | conectorAND OROR conectorOR'''
-    if len(t) == 4:
-        t[0] = t[1] or t[3]
-    else:
-        t[0] = t[1]
-        
-#DECLARACION ESTRUCTURA DE CONTROL Y DE DATOS (WHILE y HASH)
+def p_linea(p):
+    '''linea : impresion
+             | asignacion
+             | declaracion_array
+             | acceso_array
+             | declaracion_hash
+             | for_statement
+             | while_statement
+             | set_statement
+             | gets
+             | funcion_definition
+             | if_statement
+             | ifelse_statement'''
+    p[0] = p[1]
 
-def p_while_statement(t):
-    '''while_statement: WHILE condiciones cuerpo END'''
-    t[0] = ('while', t[2], t[4])    
 
-def p_hash_literal(t):
-    '''hash_literal: LLAVE_IZ pares_hash LLAVE_DER'''
-    t[0] = dict(t[2])
-    
-def p_pares_hash(t):
-    '''pares_hash: par_hash
-                | par_hash COMA pares_hash'''
-    if len(t) == 2:
-        t[0] = [t[1]]
-    else:
-        t[0] = [t[1]] + t[3]
+def p_impresion(p):
+    '''impresion : PUTS expresion
+                  | PRINT expresion'''
+    p[0] = ('print', p[2])
 
-def p_par_hash(t):
-    '''par_hash: STRING IGUAL expresion'''
-    t[0] = (t[1], t[3])  # Retorna una tupla con la clave y el valor
-    
-    
-def p_asignacion(t):
-    'asignacion: ID IGUAL expresion'
-    t[0] = f"{t[1]} = {t[3]}"
-    
-def p_impresion(t):
-    '''impresion: PUTS " " expresion
-    | PRINT " " expresion'''
-    t[0] = f"Imprimir: {t[3]}"
 
-def p_funcion(t):
-    '''funcion: DEF ID PARENTESIS_IZ parametros PARENTESIS_DER 
-    cuerpo END'''
-    t[0] = f"Funcion: {t[2]} con los parametros {t[4]}"
+def p_asignacion(p):
+    'asignacion : ID IGUAL expresion'
+    p[0] = ('assign', p[1], p[3])
 
-def p_parametros(t):
-    '''parametros: parametro 
-    | parametro COMA parametros'''
-    if len(t) == 2: 
-        t[0] = [t[1]]
-    else: 
-        t[0] = [t[1]] + t[3]    
 
-def p_parametro(t):
-    'parametro: ID'
-
-def p_set(t):
-    '''set: SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'''
-
-def p_if(t):
-    '''if: condiciones 
-    cuerpo END'''
-    t[0] = f"La condicion es: {t[2]} con su codigo: {t[3]}"
-
-def p_ifelse(t):
-    '''ifelse: condiciones 
-    cuerpo ELSE cuerpo END'''
-    t[0] = "La condicion es: {t[2]} con el bloque if: {t[3]} y else:{t[5]}" 
-
-def p_expresion(t):
-    '''expresion: ID
-    | INTEGER
-    | FLOAT
-    | STRING
-    | BOOLEAN'''
-
-def p_cuerpo(t):
-    '''cuerpo: linea
-    | linea cuerpo'''
-
-def p_linea(t):
-    '''linea: impresion
-    | asignacion'''
-    
-def p_elementos(t):
-    '''elementos: expresion
-                | expresion COMA elementos'''
-    if len(t) == 2:
-        t[0] = [t[1]]  
-    else:
-        t[0] = [t[1]] + t[3]
-
-# Manejo de errores sintácticos
-def p_error(t):
-    # Si el error es un token, lo mostramos
-    if t:
-        print(f"Error de sintaxis en el token: {t.value}")
-    else:
-        print("Error sintáctico en la entrada.")
-    
-    # Pedir nombre del usuario para el log
-    nombre_usuario = input("Por favor ingresa tu nombre: ")
-    
-    # Generar el nombre del archivo de log con fecha y hora
-    ahora = datetime.datetime.now()
-    fecha_hora = ahora.strftime("%Y%m%d-%H%M%S")
-    nombre_archivo = f"sintactico-{nombre_usuario}-{fecha_hora}.txt"
-    
-    # Crear la ruta completa para el archivo de log
-    ruta_archivo = os.path.join(os.path.dirname(__file__), ruta_carpeta, nombre_archivo)
-    
-    # Registrar el error en el archivo de log
-    with open(ruta_archivo, "a") as archivo_log:
-        archivo_log.write(f"Error: {t.value}\n")
-
-# Luis Romero
-# Definir la producción para manejar la declaración de un array
 def p_declaracion_array(p):
-    '''declaracion : ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
-    | ID IGUAL CORCHETE_IZ CORCHETE_DER '''
-    print(f"Array declarado: {p[1]} con valor {p[4]}")  # Imprime el nombre del array y su valor
+    'declaracion_array : ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'
+    p[0] = ('array_decl', p[1], p[4])
 
 
-# Producción para manejar el uso del array (ejemplo de acceso a elementos)
 def p_acceso_array(p):
-    'acceso : ID PARENTESIS_IZ expresion PARENTESIS_DER'
-    print(f"Accediendo a {p[1]} en el índice {p[3]}")  # Accede al array usando un índice
+    'acceso_array : ID CORCHETE_IZ expresion CORCHETE_DER'
+    p[0] = ('array_access', p[1], p[3])
 
-# Producción para el ciclo FOR
+
+def p_declaracion_hash(p):
+    'declaracion_hash : ID IGUAL LLAVE_IZ pares_hash LLAVE_DER'
+    p[0] = ('hash_decl', p[1], dict(p[4]))
+
+
+def p_pares_hash(p):
+    '''pares_hash : par_hash
+                  | par_hash COMA pares_hash'''
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = [p[1]] + p[3]
+
+
+def p_par_hash(p):
+    'par_hash : STRING ARROW expresion'
+    p[0] = (p[1].strip('"'), p[3])
+
+
 def p_for_statement(p):
-    'for : FOR parametros IN expresion cuerpo END'
-    print(f"For loop detected: {p[1]} iterating over {p[3]}")
-    p[0] = f"Iterating over {p[3]}"
+    'for_statement : FOR ID IN expresion cuerpo END'
+    p[0] = ('for', p[2], p[4], p[5])
 
-# Producción para el comando 'gets' (lectura desde el teclado)
+
+def p_while_statement(p):
+    'while_statement : WHILE condiciones cuerpo END'
+    p[0] = ('while', p[2], p[3])
+
+
+def p_set_statement(p):
+    'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'
+    p[0] = ('set', p[5], p[7])
+
+
 def p_gets(p):
     'gets : GETS ID'
-    variable = p[2]
-    print(f"Ingrese el valor para {variable}: ", end="")
-    valor = input()  # Llamamos a input() para que el usuario ingrese un valor
-    print(f"Valor ingresado para {variable}: {valor}")
-    p[0] = valor  # Asignamos el valor ingresado a la variable
-
-# Continuar con las producciones adicionales para manejo de expresiones y sentencias
+    p[0] = ('input', p[2])
 
 
+def p_funcion_definition(p):
+    'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
+    p[0] = ('def', p[2], p[4], p[6])
 
 
+def p_if_statement(p):
+    'if_statement : IF condiciones cuerpo END'
+    p[0] = ('if', p[2], p[3])
 
 
-# Crear el parser
-parser = yacc.yacc(module=None, debug=False, optimize=False)
+def p_ifelse_statement(p):
+    'ifelse_statement : IF condiciones cuerpo ELSE cuerpo END'
+    p[0] = ('ifelse', p[2], p[3], p[5])
 
-# Ejemplo de uso
-if __name__ == "__main__":
+
+def p_parametros(p):
+    '''parametros : parametro
+                  | parametro COMA parametros'''
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
+
+
+def p_parametro(p):
+    'parametro : ID'
+    p[0] = p[1]
+
+
+def p_elementos(p):
+    '''elementos : expresion
+                 | expresion COMA elementos'''
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
+
+
+def p_expresion_binop(p):
+    '''expresion : expresion SUMA expresion
+                 | expresion RESTA expresion
+                 | expresion MULT expresion
+                 | expresion DIV expresion
+                 | expresion MOD expresion'''
+    ops = {'+': lambda x,y: x+y, '-': lambda x,y: x-y,
+           '*': lambda x,y: x*y, '/': lambda x,y: x/y,
+           '%': lambda x,y: x%y}
+    p[0] = ops[p[2]](p[1], p[3])
+
+
+def p_expresion_group(p):
+    'expresion : PARENTESIS_IZ expresion PARENTESIS_DER'
+    p[0] = p[2]
+
+
+def p_expresion_int(p):
+    'expresion : INTEGER'
+    p[0] = p[1]
+
+
+def p_expresion_float(p):
+    'expresion : FLOAT'
+    p[0] = p[1]
+
+
+def p_expresion_id(p):
+    'expresion : ID'
+    p[0] = p[1]
+
+
+def p_expresion_string(p):
+    'expresion : STRING'
+    p[0] = p[1]
+
+
+def p_expresion_boolean(p):
+    'expresion : BOOLEAN'
+    p[0] = True if p[1].lower()=='true' else False
+
+
+def p_condicion_rel(p):
+    '''condicion : expresion IGUALIGUAL expresion
+                  | expresion DIFIGUAL expresion
+                  | expresion MAYOR expresion
+                  | expresion MENOR expresion
+                  | expresion MAYORIGUAL expresion
+                  | expresion MENORIGUAL expresion'''
+    p[0] = (p[2], p[1], p[3])
+
+
+def p_condiciones(p):
+    '''condiciones : condicion
+                   | condiciones ANDAND condicion
+                   | condiciones OROR condicion'''
+    p[0] = p[1] if len(p)==2 else (p[2], p[1], p[3])
+
+
+def p_error(p):
+    if p:
+        print(f"Error de sintaxis token='{p.value}' linea={p.lineno}")
+    else:
+        print("Error sintáctico EOF")
+
+# Construcción del parser
+parser = yacc.yacc(debug=False, optimize=False)
+
+# Ejecución interactiva
+if __name__=='__main__':
     while True:
         try:
-            s = input('Entrada > ')  # Lee la entrada
+            s = input('Entrada > ')
         except EOFError:
             break
         if not s:
             continue
-        result = parser.parse(s)  # Procesa la entrada
+        result = parser.parse(s, lexer=lexer)
         print(f"Resultado: {result}")

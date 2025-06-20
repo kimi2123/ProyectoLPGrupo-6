@@ -33,13 +33,13 @@ reserved = {
 
 # Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
 tokens = list(reserved.values()) + [
-    'SET', 'NEW', 'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
-    'MAYORIGUAL', 'MENORIGUAL', 'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
+    'SET', 'NEW', 'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'MAYORIGUAL', 'MENORIGUAL'
+    'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
+    'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
     'COMMENTARIO', 'B_COMMENTARIO', 'PARENTESIS_IZ', 'PARENTESIS_DER', 'LLAVE_IZ', 
     'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER', 'COMILLA_S', 'COMILLA_D', 'INTERPOLACION', 
     'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS', 'R_LLAVES', 'R_OTROS', 'REGEX_SLASH',
-    'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'ARRAY', 'VALOR_HASH', 'HASH', 
-    'ACCESO_HASH', 'INTERROGACION', 'PUNTO'
+    'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'INTERROGACION', 'PUNTO'
 ]
 
 # Operadores y comentarios
@@ -48,18 +48,19 @@ t_OROR = r'\|\|'
 t_DIF = r'!'
 t_MASIGUAL = r'\+='
 t_MENOSIGUAL = r'-='
-t_IGUAL = r'='
 t_SUMA = r'\+'
 t_RESTA = r'\-'
 t_MULT = r'\*'
 t_DIV = r'\/'
 t_MOD = r'\%'
+t_ARROW = r'=>'
 t_IGUALIGUAL = r'=='
 t_DIFIGUAL = r'!='
-t_MAYOR = r'>'
-t_MENOR = r'<'
 t_MAYORIGUAL = r'>='
 t_MENORIGUAL = r'<='
+t_IGUAL = r'='
+t_MAYOR = r'>'
+t_MENOR = r'<'
 t_COMMENTARIO = r'\#.*'
 t_B_COMMENTARIO = r'=begin.*?=end'
 t_PARENTESIS_IZ = r'\('
@@ -78,7 +79,6 @@ t_Q_OTROS = r'%[qQ][^\w\s]'
 t_R_LLAVES = r'%r\{'
 t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
-t_ARROW = r'=>'
 t_COMA = r','
 t_PUNTO = r'\.'
 t_PIPE = r'\|'
