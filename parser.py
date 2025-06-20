@@ -5,6 +5,7 @@ import os
 
 # Directorio para logs de errores sintácticos
 ruta_carpeta = "logsErroresSintacticos"
+os.makedirs(ruta_carpeta, exist_ok=True)
 
 # Precedencia de operadores
 precedence = (
@@ -19,9 +20,8 @@ precedence = (
 # Símbolo de inicio
 start = 'cuerpo'
 
-# ----------------------
 # Reglas del parser
-# ----------------------
+
 
 def p_cuerpo(p):
     '''cuerpo : linea
@@ -41,8 +41,7 @@ def p_linea(p):
              | set_statement
              | gets
              | funcion_definition
-             | if_statement
-             | ifelse_statement'''
+             | if_statement '''
     p[0] = p[1]
 
 
@@ -111,7 +110,7 @@ def p_expresion_set(p):
 
 # 2.2  — set_statement —
 def p_set_statement(p):
-    'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'
+    'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZQ elementos CORCHETE_DER PARENTESIS_DER'
     p[0] = ('set', p[6])     # solo guardamos la lista de elementos
 
 def p_gets(p):
@@ -120,7 +119,7 @@ def p_gets(p):
 
 #DEFINICION VIEJA PARA FUNCIONES
 def p_funcion_definition(p):
-    'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
+    'funcion_definition : DEF ID PARENTESIS_IZ expresion PARENTESIS_DER cuerpo END'
     p[0] = ('def', p[2], p[4], p[6])
 
 #DEFINICION NUEVA PARA FUNCIONES
@@ -140,13 +139,9 @@ def p_argumentos(p):
 
 
 def p_if_statement(p):
-    'if_statement : IF expresion cuerpo END'
-    p[0] = ('if', p[2], p[3])
-
-
-def p_ifelse_statement(p):
-    'ifelse_statement : IF expresion cuerpo ELSE cuerpo END'
-    p[0] = ('ifelse', p[2], p[3], p[5])
+    '''if_statement : IF expresion cuerpo END
+    | IF expresion cuerpo ELSE cuerpo END'''
+    p[0] = ('if', p[2], p[3],'else', p[4])
 
 
 def p_parametros(p):
@@ -172,7 +167,6 @@ def p_expresion_binop(p):
                  | expresion MULT expresion
                  | expresion DIV expresion
                  | expresion MOD expresion'''
-    #               1    2     3
     p[0] = (p[2], p[1], p[3])
 
 def p_expresion_cmp_logica(p):
@@ -212,36 +206,54 @@ def p_expresion_string(p):
 
 
 def p_expresion_boolean(p):
-    'expresion : BOOLEAN'
+    '''expresion : BOOLEAN
+    | TRUE
+    | FALSE '''
     p[0] = True if p[1].lower()=='true' else False
     
-#regla para reconocer TRUE OR FALSE
-def p_expresion_truefalse(p):
-    '''expresion : TRUE
-                 | FALSE'''
-    p[0] = (p[1].lower() == 'true')
-
 def p_linea_return(p):
     'linea : RETURN expresion'
     p[0] = ('return', p[2])
 
 def p_error(p):
+    global tester_name
+    # timestamp al principio de la ejecución, solo una vez
+    if not hasattr(p_error, 'log_file'):  # Si no tiene el archivo de log
+        ts = datetime.datetime.now().strftime("%d%m%Y-%Hh%M%S")
+        nombre = tester_name or "anonimo"
+        nombre_f = f"sintactico-{nombre}-{ts}.txt"
+        p_error.log_file = os.path.join(ruta_carpeta, nombre_f)  # Asigna el archivo de log
+
     if p:
-        print(f"Error de sintaxis token='{p.value}' linea={p.lineno}")
+        msg = f"Error de sintaxis token='{p.value}' linea={p.lineno}\n"
     else:
-        print("Error sintáctico EOF")
+        msg = "Error sintáctico: fin de archivo inesperado (EOF)\n"
+
+    # Escribe los errores en el mismo archivo
+    with open(p_error.log_file, "a", encoding="utf-8") as f:
+        f.write(msg)
+    print(msg.strip())
 
 # Construcción del parser
 parser = yacc.yacc(debug=False, optimize=False)
 
-# Ejecución interactiva
 if __name__=='__main__':
+    # Pedimos el nombre del tester una sola vez
+    tester_name = input("¿Quién hace el test? ").strip()
+    if not tester_name:
+        print("Debes ingresar un nombre. Terminando.")
+        exit()
+
+    # Bucle para realizar múltiples tests
     while True:
         try:
+            # Leemos la entrada a parsear
             s = input('Entrada > ')
         except EOFError:
             break
         if not s:
             continue
+
+        # Ejecutamos el parser
         result = parser.parse(s, lexer=lexer)
         print(f"Resultado: {result}")
