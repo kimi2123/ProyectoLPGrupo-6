@@ -3,9 +3,144 @@ from lexico import lexer
 import datetime
 import os
 
+
 # Ruta para guardar los archivos de log de errores sintácticos
 ruta_carpeta = "logsErroresSintacticos"
 
+precedence = (
+    ('left', 'OROR'),
+    ('left', 'ANDAND'),
+    ('left', 'DIF'),
+    ('left', 'SUMA', 'RESTA'),
+    ('left', 'MULT', 'DIV', 'MOD'),
+)
+
+#PARTE ERICK ARMIJOS 
+#expresiones aritméticas con uno o más operadores
+
+def p_suma(t):
+    '''suma: operacionSuma
+            | operacionSuma suma'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = t[1] + t[2]
+        
+def p_operacionSuma(t):
+    '''operacionSuma: factor SUMA factor'''
+    t[0] = t[1] + t[3]  
+
+def p_resta(t):
+    '''resta: operacionResta
+            | operacionResta resta'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = t[1] - t[2]
+
+def p_operacionResta(t):
+    '''operacionResta: factor RESTA factor'''
+    t[0] = t[1] - t[3]
+                
+        
+def p_multiplicacion(t):
+    '''multiplicacion: operacionMultiplicacion
+                     | operacionMultiplicacion multiplicacion'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = t[1] * t[2]
+
+def p_operacionMultiplicacion(t):
+    '''operacionMultiplicacion: factor MULT factor'''
+    t[0] = t[1] * t[3]
+
+def p_division(t):
+    '''division: operacionDivision
+               | operacionDivision division'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = t[1] / t[2]
+
+def p_operacionDivision(t):
+    '''operacionDivision: factor DIV factor'''
+    t[0] = t[1] / t[3]
+
+def p_modulo(t):
+    '''modulo: operacionModulo
+             | operacionModulo modulo'''
+    if len(t) == 2:
+        t[0] = t[1]
+    else:
+        t[0] = t[1] % t[2]
+ 
+def p_operacionModulo(t):
+    '''operacionModulo: factor MOD factor'''
+    t[0] = t[1] % t[3]                
+   
+def p_factor(t):
+    '''factor: INTEGER
+            | FLOAT'''
+    if '.' in t[1]:
+        t[0] = float(t[1])
+    else:
+        t[0] = int(t[1])
+        
+'''
+def p_signos(t):
+    signos: 'SUMA'
+             | 'RESTA' 
+def p_operacionMultiple(t):
+     ''operacionMultiple: factor signos factor''
+    t[0] = t[1] + t[3]''' 
+    
+#condiciones con uno o más conectores lógicos
+
+def p_negacion(t):
+    '''factor: DIF factor '''
+    t[0] = not t[2]
+
+def p_conectorAND(t):
+    '''conectorAND: factor
+                | factor ANDAND conectorAND'''
+    if len(t) == 4:
+        t[0] = t[1] and t[3]
+    else:
+        t[0] = t[1]
+
+
+def p_conectorOR(t):
+    '''conectorOR: conectorAND
+                | conectorAND OROR conectorOR'''
+    if len(t) == 4:
+        t[0] = t[1] or t[3]
+    else:
+        t[0] = t[1]
+        
+#DECLARACION ESTRUCTURA DE CONTROL Y DE DATOS (WHILE y HASH)
+
+def p_while_statement(t):
+    '''while_statement: WHILE condiciones cuerpo END'''
+    t[0] = ('while', t[2], t[4])    
+
+def p_hash_literal(t):
+    '''hash_literal: LLAVE_IZ pares_hash LLAVE_DER'''
+    t[0] = dict(t[2])
+    
+def p_pares_hash(t):
+    '''pares_hash: par_hash
+                | par_hash COMA pares_hash'''
+    if len(t) == 2:
+        t[0] = [t[1]]
+    else:
+        t[0] = [t[1]] + t[3]
+
+def p_par_hash(t):
+    '''par_hash: STRING IGUAL expresion'''
+    t[0] = (t[1], t[3])  # Retorna una tupla con la clave y el valor
+    
+    
 def p_asignacion(t):
     'asignacion: ID IGUAL expresion'
     t[0] = f"{t[1]} = {t[3]}"
