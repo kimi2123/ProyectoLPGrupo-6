@@ -32,6 +32,7 @@ def p_cuerpo(p):
 def p_linea(p):
     '''linea : impresion
              | asignacion
+             | expresion
              | declaracion_array
              | acceso_array
              | declaracion_hash
@@ -55,6 +56,14 @@ def p_asignacion(p):
     'asignacion : ID IGUAL expresion'
     p[0] = ('assign', p[1], p[3])
 
+def p_asignacion_plusigual(p):
+    'asignacion : ID MASIGUAL expresion'
+    # la convertimos en una suma y asignación normal
+    p[0] = ('assign', p[1], ('+', p[1], p[3]))
+
+def p_asignacion_menosigual(p):
+    'asignacion : ID MENOSIGUAL expresion'
+    p[0] = ('assign', p[1], ('-', p[1], p[3]))
 
 def p_declaracion_array(p):
     'declaracion_array : ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'
@@ -91,32 +100,52 @@ def p_for_statement(p):
 
 
 def p_while_statement(p):
-    'while_statement : WHILE condiciones cuerpo END'
+    'while_statement : WHILE expresion cuerpo END'
     p[0] = ('while', p[2], p[3])
 
 
+# 2.1  — set como expresión —
+def p_expresion_set(p):
+    'expresion : set_statement'
+    p[0] = p[1]
+
+# 2.2  — set_statement —
 def p_set_statement(p):
     'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'
-    p[0] = ('set', p[5], p[7])
-
+    p[0] = ('set', p[6])     # solo guardamos la lista de elementos
 
 def p_gets(p):
     'gets : GETS ID'
     p[0] = ('input', p[2])
 
-
+#DEFINICION VIEJA PARA FUNCIONES
 def p_funcion_definition(p):
     'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
     p[0] = ('def', p[2], p[4], p[6])
 
+#DEFINICION NUEVA PARA FUNCIONES
+def p_expresion_call(p):
+    'expresion : ID PARENTESIS_IZ argumentos_opt PARENTESIS_DER'
+    p[0] = ('call', p[1], p[3])
+
+def p_argumentos_opt(p):
+    '''argumentos_opt :  
+                      | argumentos'''
+    p[0] = [] if len(p)==1 else p[1]
+
+def p_argumentos(p):
+    '''argumentos : expresion
+                  | expresion COMA argumentos'''
+    p[0] = [p[1]] if len(p)==2 else [p[1]]+p[3]
+
 
 def p_if_statement(p):
-    'if_statement : IF condiciones cuerpo END'
+    'if_statement : IF expresion cuerpo END'
     p[0] = ('if', p[2], p[3])
 
 
 def p_ifelse_statement(p):
-    'ifelse_statement : IF condiciones cuerpo ELSE cuerpo END'
+    'ifelse_statement : IF expresion cuerpo ELSE cuerpo END'
     p[0] = ('ifelse', p[2], p[3], p[5])
 
 
@@ -143,11 +172,19 @@ def p_expresion_binop(p):
                  | expresion MULT expresion
                  | expresion DIV expresion
                  | expresion MOD expresion'''
-    ops = {'+': lambda x,y: x+y, '-': lambda x,y: x-y,
-           '*': lambda x,y: x*y, '/': lambda x,y: x/y,
-           '%': lambda x,y: x%y}
-    p[0] = ops[p[2]](p[1], p[3])
+    #               1    2     3
+    p[0] = (p[2], p[1], p[3])
 
+def p_expresion_cmp_logica(p):
+    '''expresion : expresion MAYOR expresion
+                 | expresion MENOR expresion
+                 | expresion MAYORIGUAL expresion
+                 | expresion MENORIGUAL expresion
+                 | expresion IGUALIGUAL expresion
+                 | expresion DIFIGUAL expresion
+                 | expresion ANDAND expresion
+                 | expresion OROR  expresion'''
+    p[0] = (p[2], p[1], p[3])
 
 def p_expresion_group(p):
     'expresion : PARENTESIS_IZ expresion PARENTESIS_DER'
@@ -177,24 +214,16 @@ def p_expresion_string(p):
 def p_expresion_boolean(p):
     'expresion : BOOLEAN'
     p[0] = True if p[1].lower()=='true' else False
+    
+#regla para reconocer TRUE OR FALSE
+def p_expresion_truefalse(p):
+    '''expresion : TRUE
+                 | FALSE'''
+    p[0] = (p[1].lower() == 'true')
 
-
-def p_condicion_rel(p):
-    '''condicion : expresion IGUALIGUAL expresion
-                  | expresion DIFIGUAL expresion
-                  | expresion MAYOR expresion
-                  | expresion MENOR expresion
-                  | expresion MAYORIGUAL expresion
-                  | expresion MENORIGUAL expresion'''
-    p[0] = (p[2], p[1], p[3])
-
-
-def p_condiciones(p):
-    '''condiciones : condicion
-                   | condiciones ANDAND condicion
-                   | condiciones OROR condicion'''
-    p[0] = p[1] if len(p)==2 else (p[2], p[1], p[3])
-
+def p_linea_return(p):
+    'linea : RETURN expresion'
+    p[0] = ('return', p[2])
 
 def p_error(p):
     if p:

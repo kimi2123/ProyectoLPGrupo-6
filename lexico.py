@@ -33,7 +33,7 @@ reserved = {
 
 # Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
 tokens = list(reserved.values()) + [
-    'SET', 'NEW', 'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'MAYORIGUAL', 'MENORIGUAL'
+    'SET', 'NEW', 'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'MAYORIGUAL', 'MENORIGUAL',
     'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
     'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
     'COMMENTARIO', 'B_COMMENTARIO', 'PARENTESIS_IZ', 'PARENTESIS_DER', 'LLAVE_IZ', 
@@ -98,7 +98,7 @@ def t_GETS(t):
     return t
 
 def t_SET(t):
-    r'\Set\b' 
+    r'\bSet\b' 
     t.type = 'SET'
     return t
 
