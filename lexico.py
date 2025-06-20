@@ -28,8 +28,7 @@ reserved = {
     "puts": "PUTS",
     "print": "PRINT",
     "do": "DO",
-    "nil": "NIL",
-    "array": "ARRAY" 
+    "nil": "NIL", 
 }
 
 # Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
@@ -133,12 +132,6 @@ def t_NIL(t):
     t.value = None
     return t
 
-#Luis Romero
-def t_ARRAY(t):
-    r'\barray\b'
-    t.type = 'ARRAY'
-    return t
-
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
@@ -150,14 +143,6 @@ def t_error(t):
 def t_Comment(t):
     r'\#.*'
     pass
-
-def p_gets(p):
-    'gets : GETS ID'
-    variable = p[2]
-    print(f"Ingrese el valor para {variable}: ", end="")
-    valor = input()  # Llamamos a input() para que el usuario ingrese un valor
-    print(f"Valor ingresado para {variable}: {valor}")
-    p[0] = valor  # Asignamos el valor ingresado a la variable
 
 def t_CommentarioMultiple(t):
     r'=begin[\s\S]*?=end'

@@ -20,7 +20,6 @@ def p_funcion(t):
     cuerpo END'''
     t[0] = f"Funcion: {t[2]} con los parametros {t[4]}"
 
-
 def p_parametros(t):
     '''parametros: parametro 
     | parametro COMA parametros'''
@@ -33,7 +32,7 @@ def p_parametro(t):
     'parametro: ID'
 
 def p_set(t):
-    '''set: SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ expresion CORCHETE_DER PARENTESIS_DER'''
+    '''set: SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'''
 
 def p_if(t):
     '''if: condiciones 
@@ -60,6 +59,14 @@ def p_linea(t):
     '''linea: impresion
     | asignacion'''
     
+def p_elementos(t):
+    '''elementos: expresion
+                | expresion COMA elementos'''
+    if len(t) == 2:
+        t[0] = [t[1]]  
+    else:
+        t[0] = [t[1]] + t[3]
+
 # Manejo de errores sintácticos
 def p_error(t):
     # Si el error es un token, lo mostramos
@@ -86,8 +93,10 @@ def p_error(t):
 # Luis Romero
 # Definir la producción para manejar la declaración de un array
 def p_declaracion_array(p):
-    'declaracion : ARRAY ID PARENTESIS_IZ expresion PARENTESIS_DER'
-    print(f"Array declarado: {p[2]} con valor {p[4]}")  # Imprime el nombre del array y su valor
+    '''declaracion : ID IGUAL CORCHETE_IZ elementos CORCHETE_DER
+    | ID IGUAL CORCHETE_IZ CORCHETE_DER '''
+    print(f"Array declarado: {p[1]} con valor {p[4]}")  # Imprime el nombre del array y su valor
+
 
 # Producción para manejar el uso del array (ejemplo de acceso a elementos)
 def p_acceso_array(p):
@@ -96,7 +105,7 @@ def p_acceso_array(p):
 
 # Producción para el ciclo FOR
 def p_for_statement(p):
-    'for : FOR ID IN expresion DO statement END'
+    'for : FOR parametros IN expresion cuerpo END'
     print(f"For loop detected: {p[1]} iterating over {p[3]}")
     p[0] = f"Iterating over {p[3]}"
 
@@ -110,6 +119,11 @@ def p_gets(p):
     p[0] = valor  # Asignamos el valor ingresado a la variable
 
 # Continuar con las producciones adicionales para manejo de expresiones y sentencias
+
+
+
+
+
 
 # Crear el parser
 parser = yacc.yacc(module=None, debug=False, optimize=False)
