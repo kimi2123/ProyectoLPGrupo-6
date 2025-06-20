@@ -110,7 +110,7 @@ def p_expresion_set(p):
 
 # 2.2  — set_statement —
 def p_set_statement(p):
-    'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZQ elementos CORCHETE_DER PARENTESIS_DER'
+    'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'
     p[0] = ('set', p[6])     # solo guardamos la lista de elementos
 
 def p_gets(p):

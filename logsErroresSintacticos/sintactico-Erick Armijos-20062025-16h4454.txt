@@ -1,0 +1,2 @@
+Error de sintaxis token='[' linea=1
+Error de sintaxis token='end' linea=1
