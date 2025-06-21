@@ -63,3 +63,4 @@ if persona["activo"].nil?
 else
   puts "Activo: #{persona["activo"]}"
 end
+

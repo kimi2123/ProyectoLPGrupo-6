@@ -29,7 +29,9 @@ while contador < 5
   contador += 1
 end
 
-for i in 1..6
+arr = [1, 2, 3, 4, 5]
+
+for i in arr
   puts "Iteracion #{i}"
 end
 
@@ -50,7 +52,6 @@ puts "Resultado de la division: #{division}"
 puts "Resultado del modulo: #{modulo}"
 
 # Declaración de estructuras de datos
-arr = [1, 2, 3, 4, 5]
 mi_hash = { "nombre" => "Juan", "edad" => 30, "ciudad" => "Madrid" }
 mi_set = Set.new([1, 2, 3, 4, 5])
 

@@ -28,22 +28,23 @@ def p_cuerpo(p):
               | linea cuerpo'''
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[2]
 
+#Hechas por Ricardo
 
 def p_linea(p):
     '''linea : impresion
              | asignacion
              | expresion
              | declaracion_array
-             | acceso_array
              | declaracion_hash
              | for_statement
              | while_statement
              | set_statement
              | gets
              | funcion_definition
-             | if_statement '''
-    p[0] = p[1]
-
+             | if_statement
+             | ifelse_statement
+             | hashiterator
+             | acceso_hash'''
 
 def p_impresion(p):
     '''impresion : PUTS expresion
@@ -55,6 +56,7 @@ def p_asignacion(p):
     'asignacion : ID IGUAL expresion'
     p[0] = ('assign', p[1], p[3])
 
+#Hechas por Erick
 def p_asignacion_plusigual(p):
     'asignacion : ID MASIGUAL expresion'
     # la convertimos en una suma y asignación normal
@@ -64,19 +66,27 @@ def p_asignacion_menosigual(p):
     'asignacion : ID MENOSIGUAL expresion'
     p[0] = ('assign', p[1], ('-', p[1], p[3]))
 
+#Hecha por Luis
 def p_declaracion_array(p):
-    'declaracion_array : ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'
-    p[0] = ('array_decl', p[1], p[4])
+    '''declaracion_array : ID IGUAL CORCHETE_IZ CORCHETE_DER
+    | ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'''
+    if len(p) == 4:
+        p[0] = ('array_decl', p[1], {})
+    else: 
+        p[0] = ('array_decl', p[1], p[4])
+    
+#Hechas por Ricardo
+def p_acceso_hash(p):
+    'acceso_hash : ID CORCHETE_IZ expresion CORCHETE_DER'
+    p[0] = ('hash_access', p[1], p[3])
 
+def p_expresion_accesonil(p):
+    'expresion : acceso_hash PUNTO NIL INTERROGACION'
 
-def p_acceso_array(p):
-    'acceso_array : ID CORCHETE_IZ expresion CORCHETE_DER'
-    p[0] = ('array_access', p[1], p[3])
-
-
+#Hechas por Erick
 def p_declaracion_hash(p):
-    'declaracion_hash : ID IGUAL LLAVE_IZ pares_hash LLAVE_DER'
-    p[0] = ('hash_decl', p[1], dict(p[4]))
+    '''declaracion_hash : ID IGUAL LLAVE_IZ LLAVE_DER
+    | ID IGUAL LLAVE_IZ pares_hash LLAVE_DER'''
 
 
 def p_pares_hash(p):
@@ -90,42 +100,39 @@ def p_pares_hash(p):
 
 def p_par_hash(p):
     'par_hash : STRING ARROW expresion'
-    p[0] = (p[1].strip('"'), p[3])
+    p[0] = (p[1], p[3])
 
-
+#Hecha por Luis
 def p_for_statement(p):
     'for_statement : FOR ID IN expresion cuerpo END'
     p[0] = ('for', p[2], p[4], p[5])
 
-
+#Hechas por Erick
 def p_while_statement(p):
     'while_statement : WHILE expresion cuerpo END'
     p[0] = ('while', p[2], p[3])
 
 
-# 2.1  — set como expresión —
-def p_expresion_set(p):
-    'expresion : set_statement'
-    p[0] = p[1]
-
-# 2.2  — set_statement —
+#Hecha por Ricardo
 def p_set_statement(p):
-    'set_statement : SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'
-    p[0] = ('set', p[6])     # solo guardamos la lista de elementos
+    '''set_statement : ID IGUAL SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ CORCHETE_DER PARENTESIS_DER
+    | ID IGUAL SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'''
+    p[0] = ('set', p[8])     
 
+#Hecha por Luis
 def p_gets(p):
     'gets : GETS ID'
     p[0] = ('input', p[2])
 
-#DEFINICION VIEJA PARA FUNCIONES
+#Hecha por Ricardo
 def p_funcion_definition(p):
-    'funcion_definition : DEF ID PARENTESIS_IZ expresion PARENTESIS_DER cuerpo END'
+    'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
     p[0] = ('def', p[2], p[4], p[6])
 
-#DEFINICION NUEVA PARA FUNCIONES
+#Hechas por Erick
 def p_expresion_call(p):
     'expresion : ID PARENTESIS_IZ argumentos_opt PARENTESIS_DER'
-    p[0] = ('call', p[1], p[3])
+    p[0] = ('Llamada', p[1], p[3])
 
 def p_argumentos_opt(p):
     '''argumentos_opt :  
@@ -137,11 +144,18 @@ def p_argumentos(p):
                   | expresion COMA argumentos'''
     p[0] = [p[1]] if len(p)==2 else [p[1]]+p[3]
 
+#Hechas por Ricardo:
+def p_hashiterator(p): 
+    'hashiterator : ID PUNTO EACH DO PIPE ID COMA ID PIPE cuerpo END'
+    p[0] = ('hash_iterator', p[1],p[6],p[8])
 
 def p_if_statement(p):
-    '''if_statement : IF expresion cuerpo END
-    | IF expresion cuerpo ELSE cuerpo END'''
-    p[0] = ('if', p[2], p[3],'else', p[4])
+    'if_statement : IF expresion cuerpo END'
+    p[0] = ('if', p[2], p[3])
+
+def p_ifelse_statement(p):
+    'ifelse_statement : IF expresion cuerpo ELSE cuerpo END'
+    p[0] = ('if', p[2], p[3],'else', p[5])
 
 
 def p_parametros(p):
@@ -160,7 +174,7 @@ def p_elementos(p):
                  | expresion COMA elementos'''
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
-
+#Hechas por Erick 
 def p_expresion_binop(p):
     '''expresion : expresion SUMA expresion
                  | expresion RESTA expresion
@@ -169,6 +183,7 @@ def p_expresion_binop(p):
                  | expresion MOD expresion'''
     p[0] = (p[2], p[1], p[3])
 
+#Hecha por Luis
 def p_expresion_cmp_logica(p):
     '''expresion : expresion MAYOR expresion
                  | expresion MENOR expresion
@@ -179,6 +194,7 @@ def p_expresion_cmp_logica(p):
                  | expresion ANDAND expresion
                  | expresion OROR  expresion'''
     p[0] = (p[2], p[1], p[3])
+
 
 def p_expresion_group(p):
     'expresion : PARENTESIS_IZ expresion PARENTESIS_DER'
@@ -204,12 +220,15 @@ def p_expresion_string(p):
     'expresion : STRING'
     p[0] = p[1]
 
-
 def p_expresion_boolean(p):
     '''expresion : BOOLEAN
     | TRUE
     | FALSE '''
     p[0] = True if p[1].lower()=='true' else False
+
+def p_expresion_nil(p):
+    'expresion : NIL'
+    p[0] = ('nil',)
     
 def p_linea_return(p):
     'linea : RETURN expresion'

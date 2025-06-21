@@ -17,13 +17,10 @@ reserved = {
     "else": "ELSE",
     "while": "WHILE",
     "in": "IN",
-    "case": "CASE",
     "def": "DEF",
     "end": "END",
     "gets": "GETS",
     "each": "EACH",
-    "elsif": "ELSEIF",
-    "until": "UNTIL",
     "for": "FOR",  
     "puts": "PUTS",
     "print": "PRINT",
@@ -37,8 +34,7 @@ tokens = list(reserved.values()) + [
     'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
     'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
     'COMMENTARIO', 'B_COMMENTARIO', 'PARENTESIS_IZ', 'PARENTESIS_DER', 'LLAVE_IZ', 
-    'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER', 'COMILLA_S', 'COMILLA_D', 'INTERPOLACION', 
-    'Q_LLAVES', 'Q_PARENTESIS', 'Q_CORCHETES', 'Q_OTROS', 'R_LLAVES', 'R_OTROS', 'REGEX_SLASH',
+    'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER', 'COMILLA_S', 'COMILLA_D', 'INTERPOLACION', 'REGEX_SLASH',
     'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'INTERROGACION', 'PUNTO'
 ]
 
@@ -72,12 +68,6 @@ t_CORCHETE_DER = r'\]'
 t_COMILLA_S = r'\''  # Comillas simples
 t_COMILLA_D = r'\"'  # Comillas dobles
 t_INTERPOLACION = r'\#\{'
-t_Q_LLAVES = r'%[qQ]\{'
-t_Q_PARENTESIS = r'%[qQ]\('
-t_Q_CORCHETES = r'%[qQ]\['
-t_Q_OTROS = r'%[qQ][^\w\s]'
-t_R_LLAVES = r'%r\{'
-t_R_OTROS = r'%r[^\w\s]'
 t_REGEX_SLASH = r'/'
 t_COMA = r','
 t_PUNTO = r'\.'

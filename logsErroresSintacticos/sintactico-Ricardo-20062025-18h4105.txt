@@ -1,0 +1,3 @@
+Error de sintaxis token='.' linea=1
+Error de sintaxis token='eachdo' linea=1
+Error de sintaxis token='eachdo' linea=1
