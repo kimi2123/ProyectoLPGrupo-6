@@ -73,7 +73,7 @@ def p_declaracion_array(p):
     '''declaracion_array : ID IGUAL CORCHETE_IZ CORCHETE_DER
     | ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'''
     if len(p) == 5:
-        p[0] = ('array_decl', p[1], {})
+        p[0] = ('array_decl', p[1], [])
     else: 
         p[0] = ('array_decl', p[1], p[4])
     
@@ -123,7 +123,10 @@ def p_while_statement(p):
 def p_set_statement(p):
     '''set_statement : ID IGUAL SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ CORCHETE_DER PARENTESIS_DER
     | ID IGUAL SET PUNTO NEW PARENTESIS_IZ CORCHETE_IZ elementos CORCHETE_DER PARENTESIS_DER'''
-    p[0] = ('set', p[8])     
+    if len(p) == 10:
+        p[0] = ('set', [])
+    else:
+        p[0] = ('set', p[8])     
 
 #Hecha por Luis
 def p_gets(p):
