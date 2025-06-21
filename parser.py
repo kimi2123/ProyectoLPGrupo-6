@@ -45,6 +45,8 @@ def p_linea(p):
              | ifelse_statement
              | hashiterator
              | acceso_hash'''
+    p[0] = p[1]
+
 
 def p_impresion(p):
     '''impresion : PUTS expresion
@@ -70,7 +72,7 @@ def p_asignacion_menosigual(p):
 def p_declaracion_array(p):
     '''declaracion_array : ID IGUAL CORCHETE_IZ CORCHETE_DER
     | ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'''
-    if len(p) == 4:
+    if len(p) == 5:
         p[0] = ('array_decl', p[1], {})
     else: 
         p[0] = ('array_decl', p[1], p[4])
@@ -82,12 +84,16 @@ def p_acceso_hash(p):
 
 def p_expresion_accesonil(p):
     'expresion : acceso_hash PUNTO NIL INTERROGACION'
+    p[0] = ('nil?', p[1])
 
 #Hechas por Erick
 def p_declaracion_hash(p):
     '''declaracion_hash : ID IGUAL LLAVE_IZ LLAVE_DER
     | ID IGUAL LLAVE_IZ pares_hash LLAVE_DER'''
-
+    if len(p) == 5:
+        p[0] = ('hash_decl', p[1], {})
+    else:
+        p[0] = ('hash_decl', p[1], dict(p[4]))
 
 def p_pares_hash(p):
     '''pares_hash : par_hash

@@ -4,14 +4,14 @@
 # =end
 
 # Variables
-x = 10          # Integer
-y = 5.5         # Float
-nombre = "Juan" # String
-activo = true   # Boolean
+x = 10          
+y = 5.5         
+nombre = "Juan" 
+activo = true   
 
 # Operadores Aritméticos
-suma = x + y    # Suma
-multiplicacion = x * 2  # Multiplicación
+suma = x + y    
+multiplicacion = x * 2  
 
 # Operadores Lógicos
 condicion_logica = (x > 5 || nombre == "Juan") && activo
@@ -33,8 +33,8 @@ def es_mayor_de_edad(edad)
 end
 
 # Uso de funciones
-puts sumar(10, 5)  # Llamada a la función de suma
-puts es_mayor_de_edad(22)  # Llamada a la función para verificar mayor de edad
+puts sumar(10, 5)  
+puts es_mayor_de_edad(22) 
 
 # Estructuras de control
 
