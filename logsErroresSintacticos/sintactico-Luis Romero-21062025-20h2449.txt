@@ -1,0 +1,3 @@
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
