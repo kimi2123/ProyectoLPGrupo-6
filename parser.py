@@ -7,6 +7,9 @@ import os
 ruta_carpeta = "logsErroresSintacticos"
 os.makedirs(ruta_carpeta, exist_ok=True)
 
+ruta_logs_seman = "logsErroresSemanticos"
+os.makedirs(ruta_logs_seman, exist_ok=True)
+
 # Precedencia de operadores
 precedence = (
     ('left', 'OROR'),
@@ -16,6 +19,7 @@ precedence = (
     ('left', 'SUMA', 'RESTA'),
     ('left', 'MULT', 'DIV', 'MOD'),
 )
+
 
 # Símbolo de inicio
 start = 'cuerpo'
@@ -137,10 +141,12 @@ def p_gets(p):
 def p_funcion_definition(p):
     'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
     p[0] = ('def', p[2], p[4], p[6])
+    parametro = p[4]
 
 #Hechas por Erick
 def p_expresion_call(p):
     'expresion : ID PARENTESIS_IZ argumentos_opt PARENTESIS_DER'
+
     p[0] = ('Llamada', p[1], p[3])
 
 def p_argumentos_opt(p):
@@ -264,6 +270,18 @@ def p_error(p):
 
 # Construcción del parser
 parser = yacc.yacc(debug=False, optimize=False)
+
+def log_error_seman(msg):
+    if not hasattr(log_error_seman, 'log_file'):
+        ts = datetime.datetime.now().strftime("%d%m%Y-%Hh%M%S")
+        nombre = tester_name or "anonimo"
+        nombre_f = f"semantico-{nombre}-{ts}.txt"
+        log_error_seman.log_file = os.path.join(ruta_logs_seman, nombre_f)
+    
+    with open(log_error_seman.log_file, "a", encoding="utf-8") as f:
+        f.write(msg + "\n")
+    print("[Error semántico]", msg)
+
 
 if __name__=='__main__':
     # Pedimos el nombre del tester una sola vez
