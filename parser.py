@@ -21,7 +21,12 @@ precedence = (
     ('left', 'MULT', 'DIV', 'MOD'),
 )
 
-tabla_simbolos = {} 
+#Actulizado por Luis R
+tabla_simbolos = {
+    "variables": {},
+    "tipos": {},
+    "str-funciones": ["len", "to_uppercase", "to_lowercase"],
+}
 
 # Símbolo de inicio
 start = 'cuerpo'
@@ -62,26 +67,40 @@ def p_impresion(p):
 
 def p_asignacion(p):
     'asignacion : ID IGUAL expresion'
+    tabla_simbolos['variables'][p[1]] = p[3] 
     p[0] = ('assign', p[1], p[3])
    
-#Hechas por Erick
+#Actulizado por Luis R
 def p_asignacion_plusigual(p):
     'asignacion : ID MASIGUAL expresion'
-    # la convertimos en una suma y asignación normal
-    p[0] = ('assign', p[1], ('+', p[1], p[3]))
+    if p[1] not in tabla_simbolos['variables']:
+        log_error_seman(f"Error: la variable '{p[1]}' no ha sido definida para usar '+='.")
+
+    expr_suma = ('+', ('id', p[1]), p[3])
+    tabla_simbolos['variables'][p[1]] = expr_suma 
+    p[0] = ('assign', p[1], expr_suma)
 
 def p_asignacion_menosigual(p):
     'asignacion : ID MENOSIGUAL expresion'
-    p[0] = ('assign', p[1], ('-', p[1], p[3]))
+    if p[1] not in tabla_simbolos['variables']:
+        log_error_seman(f"Error: la variable '{p[1]}' no ha sido definida para usar '-='.")
 
-#Hecha por Luis
+    expr_resta = ('-', ('id', p[1]), p[3])
+    tabla_simbolos['variables'][p[1]] = expr_resta 
+    p[0] = ('assign', p[1], expr_resta)
+
+#Actulizado por Luis R
 def p_declaracion_array(p):
     '''declaracion_array : ID IGUAL CORCHETE_IZ CORCHETE_DER
     | ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'''
     if len(p) == 5:
-        p[0] = ('array_decl', p[1], [])
+        elementos_array = []
+        p[0] = ('array_decl', p[1], elementos_array)
     else: 
-        p[0] = ('array_decl', p[1], p[4])
+        elementos_array = p[4]
+        p[0] = ('array_decl', p[1], elementos_array)
+    
+    tabla_simbolos['variables'][p[1]] = elementos_array
     
 #Hechas por Ricardo
 def p_acceso_hash(p):
@@ -92,14 +111,19 @@ def p_expresion_accesonil(p):
     'expresion : acceso_hash PUNTO NIL INTERROGACION'
     p[0] = ('nil?', p[1])
 
-#Hechas por Erick
+#Actulizado por LUIS ROMERO
 def p_declaracion_hash(p):
     '''declaracion_hash : ID IGUAL LLAVE_IZ LLAVE_DER
     | ID IGUAL LLAVE_IZ pares_hash LLAVE_DER'''
     if len(p) == 5:
-        p[0] = ('hash_decl', p[1], {})
+        valor_hash = {}
+        p[0] = ('hash_decl', p[1], valor_hash)
     else:
-        p[0] = ('hash_decl', p[1], dict(p[4]))
+        valor_hash = dict(p[4])
+        p[0] = ('hash_decl', p[1], valor_hash)
+    
+    tabla_simbolos['variables'][p[1]] = valor_hash
+
 
 def p_pares_hash(p):
     '''pares_hash : par_hash
@@ -277,31 +301,34 @@ def p_expresion_group(p):
     'expresion : PARENTESIS_IZ expresion PARENTESIS_DER'
     p[0] = p[2]
 
-
 def p_expresion_int(p):
     'expresion : INTEGER'
-    p[0] = 'int'
+    p[0] = ('int', p[1])
 
 
 def p_expresion_float(p):
     'expresion : FLOAT'
-    p[0] = 'float'
+    p[0] = ('float', p[1])
 
-
+#Actulizado por Luis R
 def p_expresion_id(p):
     'expresion : ID'
-    p[0] = p[1]
 
+    if p[1] not in tabla_simbolos['variables'] and p[1] not in tabla_simbolos: 
+        log_error_seman(f"La variable o función '{p[1]}' no ha sido definida.")
+        p[0] = ('error', f"variable no definida: {p[1]}")
+    else:
+        p[0] = ('id', p[1]) 
 
 def p_expresion_string(p):
     'expresion : STRING'
-    p[0] = "string"
+    p[0] = ("string", p[1])
 
 def p_expresion_boolean(p):
     '''expresion : BOOLEAN
     | TRUE
     | FALSE '''
-    p[0] = True if p[1].lower()=='true' else False
+    p[0] = ('boolean', True if str(p[1]).lower()=='true' else False)
 
 def p_expresion_nil(p):
     'expresion : NIL'

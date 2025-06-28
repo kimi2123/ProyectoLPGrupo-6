@@ -1,0 +1,9 @@
+La variable o función 'z' no ha sido definida.
+La variable o función 'z' no ha sido definida.
+La variable o función 'variable_fantasma' no ha sido definida.
+La variable o función 'cantidad_desconocida' no ha sido definida.
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('int', 10) , ('error', 'variable no definida: cantidad_desconocida')
+La variable o función 'contador_inexistente' no ha sido definida.
+Error: la variable 'score' no ha sido definida para usar '+='.
+La variable o función 'n' no ha sido definida.
+Error semantico, no puedes realizar la operacion * con distintos tipos de datos ('error', 'variable no definida: n') , ('id', 'factor')
