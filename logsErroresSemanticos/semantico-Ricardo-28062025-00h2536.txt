@@ -1,0 +1,2 @@
+La función sumar, Parametro#1 debe ser a y no None
+La función sumar, Parametro#2 debe ser b y no None

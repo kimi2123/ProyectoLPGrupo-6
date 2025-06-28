@@ -1,0 +1,7 @@
+Variable 'c' no declarada
+Función 'suma' no declarada
+Función 'suma' no declarada
+Función 'suma' no declarada
+La función sumar espera 2 parámetros y recibe 1
+La función sumar, parámetro #1 ('a') debe ser int y no concat
+La función sumar, parámetro #2 ('b') debe ser int y no concat

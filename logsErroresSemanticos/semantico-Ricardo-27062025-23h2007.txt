@@ -1,0 +1,4 @@
+Función '{nombre_funcion}' no declarada
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos a , b
+La funcion sumar, Parametro#1 debe ser a y no a
+La funcion sumar, Parametro#2 debe ser b y no b

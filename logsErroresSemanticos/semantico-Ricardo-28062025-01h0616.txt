@@ -1,0 +1,4 @@
+El parámetro int no tiene tipo definido en la tabla de símbolos
+El parámetro int no tiene tipo definido en la tabla de símbolos
+El parámetro int no tiene tipo definido en la tabla de símbolos
+El parámetro int no tiene tipo definido en la tabla de símbolos

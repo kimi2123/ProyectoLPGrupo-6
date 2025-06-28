@@ -1,0 +1,3 @@
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos int , True
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos float , str
+Error semantico, no puedes realizar la operacion / con distintos tipos de datos C , Users

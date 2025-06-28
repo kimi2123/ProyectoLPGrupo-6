@@ -1,0 +1,1 @@
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos a , b

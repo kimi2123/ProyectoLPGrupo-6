@@ -1,0 +1,2 @@
+Variable 'b' no declarada
+Expresión en la asignación no tiene un tipo válido

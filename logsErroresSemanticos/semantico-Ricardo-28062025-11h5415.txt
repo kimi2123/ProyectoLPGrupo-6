@@ -1,0 +1,4 @@
+La función sumar espera 2 parámetros y recibe 1
+La funcion sumar, parametro #1 debe ser int y no True
+La funcion sumar, parametro #1 debe ser int y no True
+La funcion sumar, parametro #2 debe ser int y no string

@@ -1,0 +1,3 @@
+Variable 'a' no declarada
+Variable 'b' no declarada
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos None , None

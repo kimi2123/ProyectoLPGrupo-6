@@ -1,0 +1,2 @@
+Variable 'c' no declarada
+La funcion sumar, parametro #1 debe ser int y no None

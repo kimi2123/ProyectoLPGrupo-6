@@ -2,6 +2,7 @@ import ply.yacc as yacc
 from lexico import tokens, lexer
 import datetime
 import os
+import re
 
 # Directorio para logs de errores sintácticos
 ruta_carpeta = "logsErroresSintacticos"
@@ -20,6 +21,7 @@ precedence = (
     ('left', 'MULT', 'DIV', 'MOD'),
 )
 
+tabla_simbolos = {} 
 
 # Símbolo de inicio
 start = 'cuerpo'
@@ -61,7 +63,7 @@ def p_impresion(p):
 def p_asignacion(p):
     'asignacion : ID IGUAL expresion'
     p[0] = ('assign', p[1], p[3])
-
+   
 #Hechas por Erick
 def p_asignacion_plusigual(p):
     'asignacion : ID MASIGUAL expresion'
@@ -140,14 +142,56 @@ def p_gets(p):
 #Hecha por Ricardo
 def p_funcion_definition(p):
     'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
+    
+    nombre_funcion = p[2]
+    parametros = p[4]
+    
+    tipos_parametros = {param: None for param in parametros}
+
+    tabla_simbolos[nombre_funcion] = {
+        
+        'parametros': parametros,
+        'tipos_params' : tipos_parametros,
+    }
     p[0] = ('def', p[2], p[4], p[6])
-    parametro = p[4]
 
 #Hechas por Erick
+#Regla semantica para validar que los parametros de una definicion sean los mismos cuando se llaman, hecha por Ricardo. 
 def p_expresion_call(p):
     'expresion : ID PARENTESIS_IZ argumentos_opt PARENTESIS_DER'
-
     p[0] = ('Llamada', p[1], p[3])
+    nombre_funcion = p[1]
+    tipo_params = p[3] or []          
+
+    if nombre_funcion not in tabla_simbolos:
+        log_error_seman(f"Función '{nombre_funcion}' no declarada")
+        p[0] = None
+        return
+
+    entry = tabla_simbolos[nombre_funcion]
+    nombre_param = entry['parametros']                 
+    tipos_esperado = entry.setdefault(                
+        'tipos_params', {name: None for name in nombre_param}
+    )
+
+    if len(tipo_params) != len(nombre_param):
+        log_error_seman(
+            f"La funcion {nombre_funcion} espera {len(nombre_param)} parametros y recibe {len(tipo_params)}"
+        )
+        return
+
+    for i, (tipo_param, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
+        tipo_esperado = tipos_esperado[param_name]
+
+        if tipo_esperado is None:
+            
+            tipos_esperado[param_name] = tipo_param
+        elif tipo_esperado != tipo_param:
+           
+            log_error_seman(
+                f"La funcion {nombre_funcion}, parametro #{i} debe ser {tipo_esperado} y no {tipo_param}"
+            )
+
 
 def p_argumentos_opt(p):
     '''argumentos_opt :  
@@ -190,6 +234,7 @@ def p_elementos(p):
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
 #Hechas por Erick 
+#Regla semantica para validar los tipos al hacer alguna op, hecha por Ricardo
 def p_expresion_binop(p):
     '''expresion : expresion SUMA expresion
                  | expresion RESTA expresion
@@ -197,6 +242,23 @@ def p_expresion_binop(p):
                  | expresion DIV expresion
                  | expresion MOD expresion'''
     p[0] = (p[2], p[1], p[3])
+    expIzq = p[1]
+    op = p[2]
+    expDer = p[3]
+
+    tipos_validos = ('int','float')
+
+    if expIzq not in tipos_validos or expDer not in tipos_validos:
+        log_error_seman(
+           f"Error semantico, no puedes realizar la operacion {op} con distintos tipos de datos {expIzq} , {expDer}" 
+        )
+    return
+ 
+    if 'float' in (expIzq,expDer):
+        p[0] = 'float'
+    else:
+        p[0] = 'int'
+
 
 #Hecha por Luis
 def p_expresion_cmp_logica(p):
@@ -218,12 +280,12 @@ def p_expresion_group(p):
 
 def p_expresion_int(p):
     'expresion : INTEGER'
-    p[0] = p[1]
+    p[0] = 'int'
 
 
 def p_expresion_float(p):
     'expresion : FLOAT'
-    p[0] = p[1]
+    p[0] = 'float'
 
 
 def p_expresion_id(p):
@@ -233,7 +295,7 @@ def p_expresion_id(p):
 
 def p_expresion_string(p):
     'expresion : STRING'
-    p[0] = p[1]
+    p[0] = "string"
 
 def p_expresion_boolean(p):
     '''expresion : BOOLEAN
@@ -248,6 +310,12 @@ def p_expresion_nil(p):
 def p_linea_return(p):
     'linea : RETURN expresion'
     p[0] = ('return', p[2])
+
+def imprimir_tabla_simbolos():
+    # Imprimir los contenidos de la tabla de símbolos
+    print("Contenido de la tabla de símbolos:")
+    for nombre, datos in tabla_simbolos.items():
+        print(f"{nombre}: {datos}")
 
 def p_error(p):
     global tester_name
@@ -300,6 +368,17 @@ if __name__=='__main__':
         if not s:
             continue
 
+        if not s.strip():
+            continue
+
+        # 2) FILTRO: rutas de Windows o comandos (& ...)
+        if s.startswith('& ') or re.match(r'^[A-Za-z]:(\\|/)', s):
+            # simplemente las descartamos
+            continue
+
         # Ejecutamos el parser
         result = parser.parse(s, lexer=lexer)
         print(f"Resultado: {result}")
+
+        
+        imprimir_tabla_simbolos()
