@@ -13,6 +13,7 @@ os.makedirs(ruta_logs_seman, exist_ok=True)
 
 # Precedencia de operadores
 precedence = (
+    ('left', 'PUNTO'),
     ('left', 'OROR'),
     ('left', 'ANDAND'),
     ('left', 'IGUALIGUAL', 'DIFIGUAL'),
@@ -32,7 +33,24 @@ tabla_simbolos = {
 start = 'cuerpo'
 
 # Reglas del parser
+def get_expression_type(expr_node):
+    if not isinstance(expr_node, tuple) or len(expr_node) == 0:
+        return 'unknown'
 
+    node_type = expr_node[0]
+    if node_type in ('int', 'float', 'string', 'boolean', 'nil'):
+        return node_type
+    
+    if node_type == 'id':
+        var_name = expr_node[1]
+        if var_name in tabla_simbolos['variables']:
+            return get_expression_type(tabla_simbolos['variables'][var_name])
+        return 'undefined_variable'
+
+    if node_type == 'call_method':
+        return expr_node[1]
+
+    return 'unknown'
 
 def p_cuerpo(p):
     '''cuerpo : linea
@@ -93,14 +111,9 @@ def p_asignacion_menosigual(p):
 def p_declaracion_array(p):
     '''declaracion_array : ID IGUAL CORCHETE_IZ CORCHETE_DER
     | ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'''
-    if len(p) == 5:
-        elementos_array = []
-        p[0] = ('array_decl', p[1], elementos_array)
-    else: 
-        elementos_array = p[4]
-        p[0] = ('array_decl', p[1], elementos_array)
-    
-    tabla_simbolos['variables'][p[1]] = elementos_array
+    elementos_array = [] if len(p) == 5 else p[4]
+    p[0] = ('array_decl', p[1], elementos_array)
+    tabla_simbolos['variables'][p[1]] = ('array', elementos_array)
     
 #Hechas por Ricardo
 def p_acceso_hash(p):
@@ -122,7 +135,7 @@ def p_declaracion_hash(p):
         valor_hash = dict(p[4])
         p[0] = ('hash_decl', p[1], valor_hash)
     
-    tabla_simbolos['variables'][p[1]] = valor_hash
+    tabla_simbolos['variables'][p[1]] = ('hash', valor_hash)
 
 
 def p_pares_hash(p):
@@ -310,6 +323,8 @@ def p_expresion_float(p):
     'expresion : FLOAT'
     p[0] = ('float', p[1])
 
+
+
 #Actulizado por Luis R
 def p_expresion_id(p):
     'expresion : ID'
@@ -326,9 +341,37 @@ def p_expresion_string(p):
 
 def p_expresion_boolean(p):
     '''expresion : BOOLEAN
-    | TRUE
-    | FALSE '''
-    p[0] = ('boolean', True if str(p[1]).lower()=='true' else False)
+                 | TRUE
+                 | FALSE '''
+    valor_booleano = str(p[1]).lower() == 'true'
+    p[0] = ('boolean', valor_booleano)
+
+# Regla Semántica de validacion de funciones sobre Strings Luis Romero
+def p_expresion_metodo_string(p):
+    'expresion : expresion PUNTO ID PARENTESIS_IZ PARENTESIS_DER'
+    nodo_objeto = p[1]
+    nombre_metodo = p[3]
+
+    if nombre_metodo not in tabla_simbolos['str-funciones']:
+        log_error_seman(f"Error semántico: '{nombre_metodo}' no es una función de string reconocida. Las funciones válidas son: {tabla_simbolos['str-funciones']}.")
+        p[0] = ('error_metodo_desconocido',) 
+        return
+
+    tipo_objeto = get_expression_type(nodo_objeto)
+    
+    if tipo_objeto != 'string':
+        log_error_seman(f"Error semántico: La función '{nombre_metodo}()' solo se puede llamar sobre un tipo 'string', pero se intentó usar en un tipo '{tipo_objeto}'.")
+        p[0] = ('error_tipo_incorrecto_metodo',) 
+        return
+
+    tipo_retorno = 'unknown'
+    if nombre_metodo == 'len':
+        tipo_retorno = 'int'
+    elif nombre_metodo in ('to_uppercase', 'to_lowercase'):
+        tipo_retorno = 'string'
+        
+    p[0] = ('call_method', tipo_retorno, nodo_objeto, nombre_metodo)
+
 
 def p_expresion_nil(p):
     'expresion : NIL'
