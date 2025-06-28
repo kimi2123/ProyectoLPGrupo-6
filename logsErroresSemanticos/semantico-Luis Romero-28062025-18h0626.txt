@@ -1,0 +1,6 @@
+Error semántico: La función 'len()' solo se puede llamar sobre un tipo 'string', pero se intentó usar en un tipo 'int'.
+Error semántico: La función 'to_uppercase()' solo se puede llamar sobre un tipo 'string', pero se intentó usar en un tipo 'boolean'.
+Error semántico: La función 'len()' solo se puede llamar sobre un tipo 'string', pero se intentó usar en un tipo 'unknown'.
+Error semántico: 'size' no es una función de string reconocida. Las funciones válidas son: ['len', 'to_uppercase', 'to_lowercase'].
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'longitud_nombre') , ('int', 2)
+Error semantico, no puedes realizar la operacion * con distintos tipos de datos ('id', 'nombre_mayus') , ('int', 2)
