@@ -183,13 +183,20 @@ def p_funcion_definition(p):
     nombre_funcion = p[2]
     parametros = p[4]
     
-    tipos_parametros = {param: None for param in parametros}
+    tipos_parametros = {}
 
-    tabla_simbolos[nombre_funcion] = {
+    for param in parametros:
+        if param in tabla_simbolos['variables']:
+            tipo = tabla_simbolos['variables'][param][0]
+            tipos_parametros[param] = tipo
+        else:
+            tipos_parametros[param] = None
         
+    tabla_simbolos[nombre_funcion] = {
         'parametros': parametros,
-        'tipos_params' : tipos_parametros,
+        'tipos_params': tipos_parametros,
     }
+
     p[0] = ('def', p[2], p[4], p[6])
 
 #Hechas por Erick
@@ -207,9 +214,7 @@ def p_expresion_call(p):
 
     entry = tabla_simbolos[nombre_funcion]
     nombre_param = entry['parametros']                 
-    tipos_esperado = entry.setdefault(                
-        'tipos_params', {name: None for name in nombre_param}
-    )
+    tipos_esperado = entry['tipos_params']
 
     if len(tipo_params) != len(nombre_param):
         log_error_seman(
@@ -217,17 +222,27 @@ def p_expresion_call(p):
         )
         return
 
-    for i, (tipo_param, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
-        tipo_esperado = tipos_esperado[param_name]
+    for i, (param_value, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
+        tipo_esperado = tipos_esperado.get(param_name, None)
 
-        if tipo_esperado is None:
-            
-            tipos_esperado[param_name] = tipo_param
-        elif tipo_esperado != tipo_param:
-           
+        if isinstance(param_value, tuple):
+            param_value = param_value[1]
+
+        tipo_variable = tabla_simbolos['variables'].get(param_value, None)
+
+        if tipo_variable is None:
+            log_error_seman(f"Variable '{param_value}' no definida")
+            p[0] = None
+            return
+        
+        tipo_param = tipo_variable[0]
+
+        if tipo_param != tipo_esperado:
             log_error_seman(
                 f"La funcion {nombre_funcion}, parametro #{i} debe ser {tipo_esperado} y no {tipo_param}"
             )
+            p[0] = None
+            return
 
 
 def p_argumentos_opt(p):
@@ -285,13 +300,23 @@ def p_expresion_binop(p):
 
     tipos_validos = ('int','float')
 
-    if expIzq not in tipos_validos or expDer not in tipos_validos:
+    if isinstance(expIzq, tuple):  
+        tipoIzq = tabla_simbolos['variables'].get(expIzq[1], None)[0] if expIzq[0] == 'id' else expIzq[0]
+    else:
+        tipoIzq = expIzq
+
+    if isinstance(expDer, tuple):  
+        tipoDer = tabla_simbolos['variables'].get(expDer[1], None)[0] if expDer[0] == 'id' else expDer[0]
+    else:
+        tipoDer = expDer
+
+    if tipoIzq not in tipos_validos or tipoDer not in tipos_validos:
         log_error_seman(
-           f"Error semantico, no puedes realizar la operacion {op} con distintos tipos de datos {expIzq} , {expDer}" 
+            f"Error semántico, no puedes realizar la operación {op} con tipos de datos {tipoIzq} y {tipoDer}."
         )
-    return
- 
-    if 'float' in (expIzq,expDer):
+        return
+
+    if 'float' in (tipoIzq, tipoDer):
         p[0] = 'float'
     else:
         p[0] = 'int'

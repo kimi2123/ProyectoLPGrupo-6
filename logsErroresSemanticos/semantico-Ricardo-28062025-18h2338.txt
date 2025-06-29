@@ -1,0 +1,2 @@
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('id', 'b')
+La variable o función 'c' no ha sido definida.

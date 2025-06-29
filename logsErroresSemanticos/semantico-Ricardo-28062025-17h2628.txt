@@ -1,0 +1,6 @@
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('id', 'b')
+La funcion sumar espera 2 parametros y recibe 1
+La variable o función 'c' no ha sido definida.
+La funcion sumar, parametro #1 debe ser ('id', 'a') y no ('error', 'variable no definida: c')
+La funcion sumar, parametro #2 debe ser ('id', 'b') y no ('id', 'a')
+La funcion sumar, parametro #2 debe ser ('id', 'b') y no ('id', 'c')

@@ -1,0 +1,5 @@
+La variable o función 'bend' no ha sido definida.
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('error', 'variable no definida: bend')
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('id', 'b')
+La funcion sumar, parametro #1 debe ser int y no ('id', 'a')
+La funcion sumar, parametro #2 debe ser int y no ('id', 'b')
