@@ -1,0 +1,2 @@
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('id', 'b')
+Variable '('id', 'a')' no definida

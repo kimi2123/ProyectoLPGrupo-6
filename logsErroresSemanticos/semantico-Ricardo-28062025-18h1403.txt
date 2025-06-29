@@ -1,0 +1,4 @@
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('id', 'b')
+Función 'suma' no declarada
+La funcion sumar, parametro #1 debe ser int y no id
+La funcion sumar, parametro #2 debe ser int y no id

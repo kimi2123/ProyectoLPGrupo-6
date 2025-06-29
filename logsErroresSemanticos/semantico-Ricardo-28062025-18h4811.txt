@@ -1,0 +1,6 @@
+La variable o función 'a' no ha sido definida.
+La variable o función 'b' no ha sido definida.
+Función 'suma' no declarada
+La variable o función 'b' no ha sido definida.
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('id', 'a') , ('id', 'b')
+Variable '('id', 'a')' no definida

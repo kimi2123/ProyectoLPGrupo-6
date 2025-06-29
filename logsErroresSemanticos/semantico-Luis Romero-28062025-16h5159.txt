@@ -1,0 +1,6 @@
+La variable o función 'elemento' no ha sido definida.
+La variable o función 'a' no ha sido definida.
+La variable o función 'b' no ha sido definida.
+Error semantico, no puedes realizar la operacion + con distintos tipos de datos ('error', 'variable no definida: a') , ('error', 'variable no definida: b')
+La funcion suma espera 2 parametros y recibe 1
+Error semantico, no puedes realizar la operacion * con distintos tipos de datos ('id', 'precio') , ('int', 2)
