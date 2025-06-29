@@ -1,0 +1,9 @@
+La variable o función 'TRUE' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y string.
+La variable o función 'TRUE' no ha sido definida.
+La variable o función 'TRUE' no ha sido definida.
+La variable o función 'TRUE' no ha sido definida.
+La variable o función 'TRUE' no ha sido definida.
+La variable o función 'RETURN' no ha sido definida.
+Error: 'return' fuera de cualquier funcion
+La variable o función 'x' no ha sido definida.

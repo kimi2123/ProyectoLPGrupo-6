@@ -1,0 +1,7 @@
+La variable o función 'a' no ha sido definida.
+La funcion sumar, parametro #2 debe ser int y no string
+La funcion sumar espera 2 parametros y recibe 1
+La variable o función 'TRUE' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y string.
+La variable o función 'TRUE' no ha sido definida.
+La variable o función 'TRUE' no ha sido definida.
