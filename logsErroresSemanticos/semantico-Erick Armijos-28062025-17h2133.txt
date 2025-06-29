@@ -1,0 +1,10 @@
+Tipo no permitido en comparación: string
+La expresión de la condición del 'while' debe ser booleana, pero se recibió: unknown
+Tipo no permitido en comparación: string
+Operación entre tipos incompatibles: unknown y string para la operación &&
+La expresión de la condición del 'if' debe ser booleana, pero se recibió: unknown
+Tipo no permitido en comparación: string
+Operación entre tipos incompatibles: unknown y string para la operación &&
+La expresión de la condición del 'if' debe ser booleana, pero se recibió: unknown
+Tipo no permitido en comparación: string
+La expresión de la condición del 'while' debe ser booleana, pero se recibió: unknown

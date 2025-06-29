@@ -13,6 +13,7 @@ os.makedirs(ruta_logs_seman, exist_ok=True)
 
 # Precedencia de operadores
 precedence = (
+    ('left', 'PUNTO'),
     ('left', 'OROR'),
     ('left', 'ANDAND'),
     ('left', 'IGUALIGUAL', 'DIFIGUAL'),
@@ -21,13 +22,37 @@ precedence = (
     ('left', 'MULT', 'DIV', 'MOD'),
 )
 
-tabla_simbolos = {} 
+#Actulizado por Luis R
+tabla_simbolos = {
+    "variables": {},
+    "tipos": {},
+    "str-funciones": ["len", "to_uppercase", "to_lowercase"],
+}
+
+contador_funcion = 0
 
 # Símbolo de inicio
 start = 'cuerpo'
 
 # Reglas del parser
+def get_expression_type(expr_node):
+    if not isinstance(expr_node, tuple) or len(expr_node) == 0:
+        return 'unknown'
 
+    node_type = expr_node[0]
+    if node_type in ('int', 'float', 'string', 'boolean', 'nil'):
+        return node_type
+    
+    if node_type == 'id':
+        var_name = expr_node[1]
+        if var_name in tabla_simbolos['variables']:
+            return get_expression_type(tabla_simbolos['variables'][var_name])
+        return 'undefined_variable'
+
+    if node_type == 'call_method':
+        return expr_node[1]
+
+    return 'unknown'
 
 def p_cuerpo(p):
     '''cuerpo : linea
@@ -62,26 +87,35 @@ def p_impresion(p):
 
 def p_asignacion(p):
     'asignacion : ID IGUAL expresion'
+    tabla_simbolos['variables'][p[1]] = p[3] 
     p[0] = ('assign', p[1], p[3])
    
-#Hechas por Erick
+#Actulizado por Luis R
 def p_asignacion_plusigual(p):
     'asignacion : ID MASIGUAL expresion'
-    # la convertimos en una suma y asignación normal
-    p[0] = ('assign', p[1], ('+', p[1], p[3]))
+    if p[1] not in tabla_simbolos['variables']:
+        log_error_seman(f"Error: la variable '{p[1]}' no ha sido definida para usar '+='.")
+
+    expr_suma = ('+', ('id', p[1]), p[3])
+    tabla_simbolos['variables'][p[1]] = expr_suma 
+    p[0] = ('assign', p[1], expr_suma)
 
 def p_asignacion_menosigual(p):
     'asignacion : ID MENOSIGUAL expresion'
-    p[0] = ('assign', p[1], ('-', p[1], p[3]))
+    if p[1] not in tabla_simbolos['variables']:
+        log_error_seman(f"Error: la variable '{p[1]}' no ha sido definida para usar '-='.")
 
-#Hecha por Luis
+    expr_resta = ('-', ('id', p[1]), p[3])
+    tabla_simbolos['variables'][p[1]] = expr_resta 
+    p[0] = ('assign', p[1], expr_resta)
+
+#Actulizado por Luis R
 def p_declaracion_array(p):
     '''declaracion_array : ID IGUAL CORCHETE_IZ CORCHETE_DER
     | ID IGUAL CORCHETE_IZ elementos CORCHETE_DER'''
-    if len(p) == 5:
-        p[0] = ('array_decl', p[1], [])
-    else: 
-        p[0] = ('array_decl', p[1], p[4])
+    elementos_array = [] if len(p) == 5 else p[4]
+    p[0] = ('array_decl', p[1], elementos_array)
+    tabla_simbolos['variables'][p[1]] = ('array', elementos_array)
     
 #Hechas por Ricardo
 def p_acceso_hash(p):
@@ -92,14 +126,31 @@ def p_expresion_accesonil(p):
     'expresion : acceso_hash PUNTO NIL INTERROGACION'
     p[0] = ('nil?', p[1])
 
-#Hechas por Erick
+#Actulizado por LUIS ROMERO
 def p_declaracion_hash(p):
     '''declaracion_hash : ID IGUAL LLAVE_IZ LLAVE_DER
     | ID IGUAL LLAVE_IZ pares_hash LLAVE_DER'''
-    if len(p) == 5:
-        p[0] = ('hash_decl', p[1], {})
+    if len(p) == 5:          # {} vacío
+        valor_hash = {}
     else:
-        p[0] = ('hash_decl', p[1], dict(p[4]))
+        pares = p[4]         # lista de tuplas (clave, valor)
+
+        seen_keys = set()
+        for k, v in pares:
+            # Normalizamos la clave a representación de string sencilla
+            # (puedes afinar según cómo representes STRING / INTEGER).
+            clave_repr = repr(k)
+            if clave_repr in seen_keys:
+                log_error_seman(f"Error: clave duplicada en hash literal: {k}")
+                p[0] = None
+                return
+            seen_keys.add(clave_repr)
+
+        valor_hash = dict(pares)
+
+    p[0] = ('hash_decl', p[1], valor_hash)
+    tabla_simbolos['variables'][p[1]] = ('hash', valor_hash)
+
 
 def p_pares_hash(p):
     '''pares_hash : par_hash
@@ -139,21 +190,44 @@ def p_gets(p):
     'gets : GETS ID'
     p[0] = ('input', p[2])
 
-#Hecha por Ricardo
+def p_parametros_opt(p):
+    '''parametros_opt :
+                      | parametros'''
+    p[0] = [] if len(p) == 1 else p[1]
+
+def p_funcion_start(p):
+    'funcion_start : DEF ID PARENTESIS_IZ parametros_opt PARENTESIS_DER'
+    global contador_funcion
+    contador_funcion += 1           # ↥ entramos en función
+    p[0] = (p[2], p[4])  
+  
+# Hecha por Ricardo
+#   funcion_start devuelve (nombre_funcion, parametros)
+#   cuerpo         devuelve la lista de sentencias del cuerpo
 def p_funcion_definition(p):
-    'funcion_definition : DEF ID PARENTESIS_IZ parametros PARENTESIS_DER cuerpo END'
-    
-    nombre_funcion = p[2]
-    parametros = p[4]
-    
-    tipos_parametros = {param: None for param in parametros}
+    'funcion_definition : funcion_start cuerpo END'
+    global contador_funcion
+
+    nonmbre_funcion, parametros = p[1]  
+    cuerpo_funcion           = p[2]      
+
+    nombre_funcion = nonmbre_funcion
+
+    tipos_parametros = {}
+    for param in parametros:
+        if param in tabla_simbolos['variables']:
+            tipo = tabla_simbolos['variables'][param][0]
+            tipos_parametros[param] = tipo
+        else:
+            tipos_parametros[param] = None
 
     tabla_simbolos[nombre_funcion] = {
-        
         'parametros': parametros,
-        'tipos_params' : tipos_parametros,
+        'tipos_params': tipos_parametros,
     }
-    p[0] = ('def', p[2], p[4], p[6])
+    contador_funcion -= 1
+
+    p[0] = ('def', cuerpo_funcion, parametros, cuerpo_funcion)
 
 #Hechas por Erick
 #Regla semantica para validar que los parametros de una definicion sean los mismos cuando se llaman, hecha por Ricardo. 
@@ -170,9 +244,7 @@ def p_expresion_call(p):
 
     entry = tabla_simbolos[nombre_funcion]
     nombre_param = entry['parametros']                 
-    tipos_esperado = entry.setdefault(                
-        'tipos_params', {name: None for name in nombre_param}
-    )
+    tipos_esperado = entry['tipos_params']
 
     if len(tipo_params) != len(nombre_param):
         log_error_seman(
@@ -180,17 +252,27 @@ def p_expresion_call(p):
         )
         return
 
-    for i, (tipo_param, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
-        tipo_esperado = tipos_esperado[param_name]
+    for i, (param_value, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
+        tipo_esperado = tipos_esperado.get(param_name, None)
 
-        if tipo_esperado is None:
-            
-            tipos_esperado[param_name] = tipo_param
-        elif tipo_esperado != tipo_param:
-           
+        if isinstance(param_value, tuple):
+            param_value = param_value[1]
+
+        tipo_variable = tabla_simbolos['variables'].get(param_value, None)
+
+        if tipo_variable is None:
+            log_error_seman(f"Variable '{param_value}' no definida")
+            p[0] = None
+            return
+        
+        tipo_param = tipo_variable[0]
+
+        if tipo_param != tipo_esperado:
             log_error_seman(
                 f"La funcion {nombre_funcion}, parametro #{i} debe ser {tipo_esperado} y no {tipo_param}"
             )
+            p[0] = None
+            return
 
 
 def p_argumentos_opt(p):
@@ -234,6 +316,8 @@ def p_elementos(p):
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
 #Hechas por Erick 
+
+
 #Regla semantica para validar los tipos al hacer alguna op, hecha por Ricardo
 def p_expresion_binop(p):
     '''expresion : expresion SUMA expresion
@@ -248,19 +332,31 @@ def p_expresion_binop(p):
 
     tipos_validos = ('int','float')
 
-    if expIzq not in tipos_validos or expDer not in tipos_validos:
+    if isinstance(expIzq, tuple):  
+        tipoIzq = tabla_simbolos['variables'].get(expIzq[1], None)[0] if expIzq[0] == 'id' else expIzq[0]
+    else:
+        tipoIzq = expIzq
+
+    if isinstance(expDer, tuple):  
+        tipoDer = tabla_simbolos['variables'].get(expDer[1], None)[0] if expDer[0] == 'id' else expDer[0]
+    else:
+        tipoDer = expDer
+
+    if tipoIzq not in tipos_validos or tipoDer not in tipos_validos:
         log_error_seman(
-           f"Error semantico, no puedes realizar la operacion {op} con distintos tipos de datos {expIzq} , {expDer}" 
+            f"Error semántico, no puedes realizar la operación {op} con tipos de datos {tipoIzq} y {tipoDer}."
         )
-    return
- 
-    if 'float' in (expIzq,expDer):
+        return
+
+    if 'float' in (tipoIzq, tipoDer):
         p[0] = 'float'
     else:
         p[0] = 'int'
 
 
 #Hecha por Luis
+#Implementacion de regla semantica Erick Armijos
+##Validación de que las operaciones de tipo booleano no se realicen con valores no booleanos
 def p_expresion_cmp_logica(p):
     '''expresion : expresion MAYOR expresion
                  | expresion MENOR expresion
@@ -270,38 +366,81 @@ def p_expresion_cmp_logica(p):
                  | expresion DIFIGUAL expresion
                  | expresion ANDAND expresion
                  | expresion OROR  expresion'''
+    # Obtener los tipos de los operandos izquierdo y derecho
+    tipo_izq = get_expression_type(p[1])
+    tipo_der = get_expression_type(p[3])
+    
+    # Verificar que los tipos de los operandos sean compatibles
+    if tipo_izq != tipo_der:
+        log_error_seman(f"Error: comparación entre tipos incompatibles: {tipo_izq} y {tipo_der}.")
+        p[0] = None  # No realizar la comparación si los tipos no son compatibles
+        return
+    
+    # Si los tipos son compatibles, continuar con la comparación
     p[0] = (p[2], p[1], p[3])
-
 
 def p_expresion_group(p):
     'expresion : PARENTESIS_IZ expresion PARENTESIS_DER'
     p[0] = p[2]
 
-
 def p_expresion_int(p):
     'expresion : INTEGER'
-    p[0] = 'int'
+    p[0] = ('int', p[1])
 
 
 def p_expresion_float(p):
     'expresion : FLOAT'
-    p[0] = 'float'
+    p[0] = ('float', p[1])
 
 
+
+#Actulizado por Luis R
 def p_expresion_id(p):
     'expresion : ID'
-    p[0] = p[1]
 
+    if p[1] not in tabla_simbolos['variables'] and p[1] not in tabla_simbolos: 
+        log_error_seman(f"La variable o función '{p[1]}' no ha sido definida.")
+        p[0] = ('error', f"variable no definida: {p[1]}")
+    else:
+        p[0] = ('id', p[1]) 
 
 def p_expresion_string(p):
     'expresion : STRING'
-    p[0] = "string"
+    p[0] = ("string", p[1])
 
 def p_expresion_boolean(p):
     '''expresion : BOOLEAN
-    | TRUE
-    | FALSE '''
-    p[0] = True if p[1].lower()=='true' else False
+                 | TRUE
+                 | FALSE '''
+    valor_booleano = str(p[1]).lower() == 'true'
+    p[0] = ('boolean', valor_booleano)
+
+# Regla Semántica de validacion de funciones sobre Strings Luis Romero
+def p_expresion_metodo_string(p):
+    'expresion : expresion PUNTO ID PARENTESIS_IZ PARENTESIS_DER'
+    nodo_objeto = p[1]
+    nombre_metodo = p[3]
+
+    if nombre_metodo not in tabla_simbolos['str-funciones']:
+        log_error_seman(f"Error semántico: '{nombre_metodo}' no es una función de string reconocida. Las funciones válidas son: {tabla_simbolos['str-funciones']}.")
+        p[0] = ('error_metodo_desconocido',) 
+        return
+
+    tipo_objeto = get_expression_type(nodo_objeto)
+    
+    if tipo_objeto != 'string':
+        log_error_seman(f"Error semántico: La función '{nombre_metodo}()' solo se puede llamar sobre un tipo 'string', pero se intentó usar en un tipo '{tipo_objeto}'.")
+        p[0] = ('error_tipo_incorrecto_metodo',) 
+        return
+
+    tipo_retorno = 'unknown'
+    if nombre_metodo == 'len':
+        tipo_retorno = 'int'
+    elif nombre_metodo in ('to_uppercase', 'to_lowercase'):
+        tipo_retorno = 'string'
+        
+    p[0] = ('call_method', tipo_retorno, nodo_objeto, nombre_metodo)
+
 
 def p_expresion_nil(p):
     'expresion : NIL'
@@ -309,6 +448,10 @@ def p_expresion_nil(p):
     
 def p_linea_return(p):
     'linea : RETURN expresion'
+    if contador_funcion == 0:
+        log_error_seman("Error: 'return' fuera de cualquier funcion")
+        p[0] = None
+        return
     p[0] = ('return', p[2])
 
 def imprimir_tabla_simbolos():
@@ -344,7 +487,11 @@ def log_error_seman(msg):
         ts = datetime.datetime.now().strftime("%d%m%Y-%Hh%M%S")
         nombre = tester_name or "anonimo"
         nombre_f = f"semantico-{nombre}-{ts}.txt"
-        log_error_seman.log_file = os.path.join(ruta_logs_seman, nombre_f)
+        
+        # Obtén la ruta absoluta del directorio actual del proyecto
+        proyecto_dir = os.getcwd()  # Esto obtiene el directorio actual
+        log_path = os.path.join(proyecto_dir, ruta_logs_seman, nombre_f)  # Ruta correcta
+        log_error_seman.log_file = log_path
     
     with open(log_error_seman.log_file, "a", encoding="utf-8") as f:
         f.write(msg + "\n")

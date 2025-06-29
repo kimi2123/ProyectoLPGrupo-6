@@ -1,0 +1,3 @@
+Error: comparación entre tipos incompatibles: int y boolean.
+Error: comparación entre tipos incompatibles: string y boolean.
+Error: comparación entre tipos incompatibles: string y int.
