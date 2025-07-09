@@ -11,6 +11,8 @@ os.makedirs(ruta_carpeta, exist_ok=True)
 ruta_logs_seman = "logsErroresSemanticos"
 os.makedirs(ruta_logs_seman, exist_ok=True)
 
+lista_errores = []
+
 # Precedencia de operadores
 precedence = (
     ('left', 'PUNTO'),
@@ -477,6 +479,7 @@ def p_error(p):
     # Escribe los errores en el mismo archivo
     with open(p_error.log_file, "a", encoding="utf-8") as f:
         f.write(msg)
+    lista_errores.append(msg.strip())
     print(msg.strip())
 
 # Construcción del parser
@@ -496,7 +499,44 @@ def log_error_seman(msg):
     with open(log_error_seman.log_file, "a", encoding="utf-8") as f:
         f.write(msg + "\n")
     print("[Error semántico]", msg)
+    error_completo = f"[Error semántico] {msg}"
+    lista_errores.append(error_completo) 
 
+tester_name = "default_user"
+
+def analizar_codigo(codigo_fuente, nombre_tester):
+
+    global tester_name, lista_errores, tabla_simbolos, contador_funcion
+    
+    tester_name = nombre_tester
+    lista_errores.clear()
+    
+
+    tabla_simbolos.clear()
+    tabla_simbolos.update({
+        "variables": {},
+        "tipos": {},
+        "str-funciones": ["len", "to_uppercase", "to_lowercase"],
+    })
+    contador_funcion = 0
+
+    if hasattr(p_error, 'log_file'):
+        delattr(p_error, 'log_file')
+    if hasattr(log_error_seman, 'log_file'):
+        delattr(log_error_seman, 'log_file')
+        
+    lexer.lineno = 1
+
+    if not codigo_fuente.strip():
+        return None, ["No se ingresó código para analizar."]
+
+    try:
+        resultado = parser.parse(codigo_fuente, lexer=lexer)
+    except Exception as e:
+        lista_errores.append(f"Error crítico en el parser: {e}")
+        resultado = None
+
+    return resultado, lista_errores
 
 if __name__=='__main__':
     # Pedimos el nombre del tester una sola vez
@@ -518,10 +558,20 @@ if __name__=='__main__':
         if not s.strip():
             continue
 
+        result, errores = analizar_codigo(s, tester_name)
+
         # 2) FILTRO: rutas de Windows o comandos (& ...)
         if s.startswith('& ') or re.match(r'^[A-Za-z]:(\\|/)', s):
             # simplemente las descartamos
             continue
+
+        if errores:
+            print("Se encontraron los siguientes errores:")
+            for err in errores:
+                print(f"- {err}")
+        else:
+            print("Análisis completado sin errores.")
+            print(f"Resultado AST: {result}")
 
         # Ejecutamos el parser
         result = parser.parse(s, lexer=lexer)
