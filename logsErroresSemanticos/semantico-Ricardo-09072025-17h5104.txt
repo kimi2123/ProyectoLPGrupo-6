@@ -1,0 +1,4 @@
+La variable o función 'a' no ha sido definida.
+Error: 'return' fuera de cualquier funcion
+La variable o función 'a' no ha sido definida.
+Error: 'return' fuera de cualquier funcion

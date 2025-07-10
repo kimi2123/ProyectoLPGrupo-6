@@ -1,0 +1,4 @@
+Error de sintaxis token='c' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)
+Error de sintaxis token='c' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)

@@ -1,0 +1,19 @@
+La variable o función 'edad' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+La variable o función 'edad' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+La variable o función 'edad' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+La variable o función 'es_estudiante' no ha sido definida.
+La variable o función 'edad' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+La variable o función 'es_estudiante' no ha sido definida.
+La variable o función 'contador' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+La variable o función 'contador' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+Error: la variable 'contador' no ha sido definida para usar '+='.
+La variable o función 'arr' no ha sido definida.
+La variable o función 'arr' no ha sido definida.
+Función 'saludo' no declarada
+Función 'saludo' no declarada

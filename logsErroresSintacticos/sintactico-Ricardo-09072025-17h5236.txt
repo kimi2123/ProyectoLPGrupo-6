@@ -1,0 +1,2 @@
+Error de sintaxis token='b' linea=1
+Error de sintaxis token='b' linea=1

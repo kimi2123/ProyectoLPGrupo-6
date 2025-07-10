@@ -1,0 +1,2 @@
+Variable '10' no definida
+Variable '22' no definida

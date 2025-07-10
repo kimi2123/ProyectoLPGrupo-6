@@ -1,0 +1,2 @@
+Error semántico, no puedes realizar la operación + con tipos de datos int y i.
+Error: comparación entre tipos incompatibles: unknown y int.

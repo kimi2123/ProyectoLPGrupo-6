@@ -1,0 +1,2 @@
+Error: comparación entre tipos incompatibles: unknown y boolean.
+Error: comparación entre tipos incompatibles: unknown y boolean.

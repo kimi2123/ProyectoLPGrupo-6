@@ -1,0 +1,7 @@
+Error: comparación entre tipos incompatibles: unknown y boolean.
+La variable o función 'a' no ha sido definida.
+La variable o función 'b' no ha sido definida.
+Error semántico, no puedes realizar la operación + con tipos de datos error y error.
+Variable '10' no definida
+Variable '22' no definida
+Error: comparación entre tipos incompatibles: unknown y boolean.

@@ -1,0 +1,4 @@
+Error: comparación entre tipos incompatibles: unknown y boolean.
+Función 'saludo' no declarada
+Error: comparación entre tipos incompatibles: unknown y boolean.
+Función 'saludo' no declarada

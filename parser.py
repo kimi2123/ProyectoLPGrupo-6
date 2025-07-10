@@ -53,6 +53,9 @@ def get_expression_type(expr_node):
 
     if node_type == 'call_method':
         return expr_node[1]
+    
+    if node_type in ('==', '!=', '>', '<', '>=', '<=', 'ANDAND', 'OROR'):
+        return 'boolean'
 
     return 'unknown'
 
@@ -200,7 +203,7 @@ def p_parametros_opt(p):
 def p_funcion_start(p):
     'funcion_start : DEF ID PARENTESIS_IZ parametros_opt PARENTESIS_DER'
     global contador_funcion
-    contador_funcion += 1           # ↥ entramos en función
+    contador_funcion += 1      
     p[0] = (p[2], p[4])  
   
 # Hecha por Ricardo
@@ -254,24 +257,13 @@ def p_expresion_call(p):
         )
         return
 
-    for i, (param_value, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
-        tipo_esperado = tipos_esperado.get(param_name, None)
+    for i, (argumento, param_name) in enumerate(zip(tipo_params, nombre_param), start=1):
+        tipo_esperado = tipos_esperado[param_name]
+        tipo_real = get_expression_type(argumento)
 
-        if isinstance(param_value, tuple):
-            param_value = param_value[1]
-
-        tipo_variable = tabla_simbolos['variables'].get(param_value, None)
-
-        if tipo_variable is None:
-            log_error_seman(f"Variable '{param_value}' no definida")
-            p[0] = None
-            return
-        
-        tipo_param = tipo_variable[0]
-
-        if tipo_param != tipo_esperado:
+        if tipo_real != tipo_esperado:
             log_error_seman(
-                f"La funcion {nombre_funcion}, parametro #{i} debe ser {tipo_esperado} y no {tipo_param}"
+                f"La función '{nombre_funcion}', parámetro #{i} ('{param_name}') debe ser '{tipo_esperado}' pero es '{tipo_real}'."
             )
             p[0] = None
             return
@@ -318,8 +310,6 @@ def p_elementos(p):
     p[0] = [p[1]] if len(p) == 2 else [p[1]] + p[3]
 
 #Hechas por Erick 
-
-
 #Regla semantica para validar los tipos al hacer alguna op, hecha por Ricardo
 def p_expresion_binop(p):
     '''expresion : expresion SUMA expresion
@@ -327,33 +317,25 @@ def p_expresion_binop(p):
                  | expresion MULT expresion
                  | expresion DIV expresion
                  | expresion MOD expresion'''
-    p[0] = (p[2], p[1], p[3])
-    expIzq = p[1]
+    
     op = p[2]
-    expDer = p[3]
+    izq = p[1]
+    der = p[3]
 
-    tipos_validos = ('int','float')
+    tipo_izq = get_expression_type(izq)
+    tipo_der = get_expression_type(der)
+    tipos_validos = ('int', 'float')
 
-    if isinstance(expIzq, tuple):  
-        tipoIzq = tabla_simbolos['variables'].get(expIzq[1], None)[0] if expIzq[0] == 'id' else expIzq[0]
-    else:
-        tipoIzq = expIzq
-
-    if isinstance(expDer, tuple):  
-        tipoDer = tabla_simbolos['variables'].get(expDer[1], None)[0] if expDer[0] == 'id' else expDer[0]
-    else:
-        tipoDer = expDer
-
-    if tipoIzq not in tipos_validos or tipoDer not in tipos_validos:
+    if tipo_izq not in tipos_validos or tipo_der not in tipos_validos:
         log_error_seman(
-            f"Error semántico, no puedes realizar la operación {op} con tipos de datos {tipoIzq} y {tipoDer}."
+            f"Error semántico, no puedes realizar la operación {op} con tipos de datos {tipo_izq} y {tipo_der}."
         )
+        p[0] = ('error_binop', op, izq, der)
         return
 
-    if 'float' in (tipoIzq, tipoDer):
-        p[0] = 'float'
-    else:
-        p[0] = 'int'
+    resultado_tipo = 'float' if 'float' in (tipo_izq, tipo_der) else 'int'
+
+    p[0] = (resultado_tipo, (op, izq, der))
 
 
 #Hecha por Luis

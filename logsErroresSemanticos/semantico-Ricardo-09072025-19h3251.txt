@@ -1,0 +1,1 @@
+Error: comparación entre tipos incompatibles: unknown y int.

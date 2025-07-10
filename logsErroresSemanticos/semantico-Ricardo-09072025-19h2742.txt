@@ -1,0 +1,1 @@
+La función 'sumar', parámetro #1 ('a') debe ser 'int' pero es 'boolean'.

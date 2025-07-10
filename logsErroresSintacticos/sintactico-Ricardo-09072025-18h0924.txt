@@ -1,0 +1,36 @@
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error de sintaxis token='else' linea=1
+Error de sintaxis token='else' linea=1
+Error de sintaxis token='end' linea=1
+Error de sintaxis token='end' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error de sintaxis token='end' linea=1
+Error de sintaxis token='end' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error de sintaxis token='end' linea=1
+Error de sintaxis token='end' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error de sintaxis token='end' linea=1
+Error de sintaxis token='end' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)
+Error de sintaxis token='end' linea=1
+Error de sintaxis token='end' linea=1
+Error sintáctico: fin de archivo inesperado (EOF)
+Error sintáctico: fin de archivo inesperado (EOF)

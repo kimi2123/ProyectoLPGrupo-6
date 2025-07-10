@@ -1,0 +1,7 @@
+La variable o función 'a' no ha sido definida.
+La variable o función 'b' no ha sido definida.
+Error semántico, no puedes realizar la operación + con tipos de datos unknown y unknown.
+La variable o función 'edad' no ha sido definida.
+Error: comparación entre tipos incompatibles: unknown y int.
+La función 'sumar', parámetro #1 ('a') debe ser 'None' pero es 'int'.
+La función 'es_mayor_de_edad', parámetro #1 ('edad') debe ser 'None' pero es 'int'.

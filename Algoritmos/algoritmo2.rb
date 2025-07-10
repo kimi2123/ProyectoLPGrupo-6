@@ -5,7 +5,10 @@
 
 # Variables
 x = 10          
-y = 5.5         
+y = 5.5  
+a = 5
+b = 6
+edad = 18       
 nombre = "Juan" 
 activo = true   
 
@@ -14,7 +17,7 @@ suma = x + y
 multiplicacion = x * 2  
 
 # Operadores Lógicos
-condicion_logica = (x > 5 || nombre == "Juan") && activo
+condicion_logica = (x > 5 || nombre == "Juan")
 
 # Hash (estructura de datos)
 persona = { "nombre" => "Carlos", "edad" => 30 }

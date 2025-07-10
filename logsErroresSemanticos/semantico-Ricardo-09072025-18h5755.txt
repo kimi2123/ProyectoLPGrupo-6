@@ -1,0 +1,3 @@
+Error: comparación entre tipos incompatibles: unknown y boolean.
+Variable '22' no definida
+Error: comparación entre tipos incompatibles: unknown y boolean.

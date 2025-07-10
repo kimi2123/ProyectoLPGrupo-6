@@ -30,18 +30,17 @@ reserved = {
 
 # Cambiar: Eliminar 'NIL' y 'DOT' de tokens porque ya están definidos más abajo
 tokens = list(reserved.values()) + [
-    'SET', 'NEW', 'ANDAND', 'OROR', 'DIF', 'MASIGUAL', 'MENOSIGUAL', 'MAYORIGUAL', 'MENORIGUAL',
+    'SET', 'NEW', 'ANDAND', 'OROR', 'MASIGUAL', 'MENOSIGUAL', 'MAYORIGUAL', 'MENORIGUAL',
     'IGUAL', 'IGUALIGUAL', 'DIFIGUAL', 'MAYOR', 'MENOR', 
     'SUMA', 'RESTA', 'MULT', 'DIV', 'MOD', 'ARROW', 
     'COMMENTARIO', 'B_COMMENTARIO', 'PARENTESIS_IZ', 'PARENTESIS_DER', 'LLAVE_IZ', 
-    'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER', 'COMILLA_S', 'COMILLA_D', 'INTERPOLACION', 'REGEX_SLASH',
+    'LLAVE_DER', 'CORCHETE_IZ', 'CORCHETE_DER',
     'ID', 'INTEGER', 'FLOAT', 'STRING', 'BOOLEAN', 'COMA', 'PIPE', 'INTERROGACION', 'PUNTO'
 ]
 
 # Operadores y comentarios
 t_ANDAND = r'&&'
 t_OROR = r'\|\|'
-t_DIF = r'!'
 t_MASIGUAL = r'\+='
 t_MENOSIGUAL = r'-='
 t_SUMA = r'\+'
@@ -65,10 +64,6 @@ t_LLAVE_IZ = r'\{'
 t_LLAVE_DER = r'\}'
 t_CORCHETE_IZ = r'\['
 t_CORCHETE_DER = r'\]'
-t_COMILLA_S = r'\''  # Comillas simples
-t_COMILLA_D = r'\"'  # Comillas dobles
-t_INTERPOLACION = r'\#\{'
-t_REGEX_SLASH = r'/'
 t_COMA = r','
 t_PUNTO = r'\.'
 t_PIPE = r'\|'

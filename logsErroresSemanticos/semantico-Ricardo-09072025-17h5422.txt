@@ -1,0 +1,4 @@
+La variable o función 'x' no ha sido definida.
+Error semántico, no puedes realizar la operación * con tipos de datos error y string.
+La variable o función 'x' no ha sido definida.
+Error semántico, no puedes realizar la operación * con tipos de datos error y string.

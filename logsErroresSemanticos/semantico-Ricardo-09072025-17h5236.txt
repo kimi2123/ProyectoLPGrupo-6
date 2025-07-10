@@ -1,0 +1,2 @@
+La variable o función 'a' no ha sido definida.
+La variable o función 'a' no ha sido definida.

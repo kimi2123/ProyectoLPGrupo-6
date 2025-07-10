@@ -35,8 +35,6 @@ for i in arr
   puts "Iteracion #{i}"
 end
 
-saludo("Carlos")
-
 # Expresión aritmética con operadores
 suma = 5 + 3
 resta = 10 - 2

@@ -1,0 +1,29 @@
+La variable o función 'C' no ha sido definida.
+La variable o función 'Users' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos error y error.
+La variable o función 'ricky' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'AppData' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'Local' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'Programs' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'Python' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'Python313' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'python' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'Users' no ha sido definida.
+La variable o función 'ricky' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos error y error.
+La variable o función 'OneDrive' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'Escritorio' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'ProyectoLPGrupo' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos / y error.
+La variable o función 'parser' no ha sido definida.
+Error semántico, no puedes realizar la operación / con tipos de datos int y error.
+Error semántico, no puedes realizar la operación - con tipos de datos / y /.
