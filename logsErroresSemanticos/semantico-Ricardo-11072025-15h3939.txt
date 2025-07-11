@@ -1,0 +1,1 @@
+La función 'resta', parámetro #2 ('b') debe ser 'int' pero es 'boolean'.

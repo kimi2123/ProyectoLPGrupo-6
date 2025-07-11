@@ -10,6 +10,8 @@ edad = 25
 altura = 1.75
 es_estudiante = true
 saludo = "Hola, soy #{nombre} y tengo #{edad} años."
+a = 5
+b = 2
 
 # Estructuras de control
 if edad >= 18
@@ -52,6 +54,12 @@ puts "Resultado del modulo: #{modulo}"
 # Declaración de estructuras de datos
 mi_hash = { "nombre" => "Juan", "edad" => 30, "ciudad" => "Madrid" }
 mi_set = Set.new([1, 2, 3, 4, 5])
+
+def resta(a, b)
+  return a - b
+end
+
+resta(4, 8)
 
 # Iterando sobre un hash
 mi_hash.each do |clave, valor|

@@ -1,0 +1,1 @@
+Error de sintaxis token='puts' linea=1

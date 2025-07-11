@@ -1,0 +1,1 @@
+Error de sintaxis token='1' linea=1

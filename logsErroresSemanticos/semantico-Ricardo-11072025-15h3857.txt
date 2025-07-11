@@ -1,0 +1,1 @@
+La funcion resta espera 2 parametros y recibe 1

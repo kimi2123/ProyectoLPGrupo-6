@@ -1,0 +1,6 @@
+La variable o función 'a' no ha sido definida.
+La variable o función 'b' no ha sido definida.
+Error semántico, no puedes realizar la operación - con tipos de datos unknown y unknown.
+La variable o función 'a' no ha sido definida.
+La variable o función 'b' no ha sido definida.
+La función 'resta', parámetro #1 ('a') debe ser 'None' pero es 'unknown'.
